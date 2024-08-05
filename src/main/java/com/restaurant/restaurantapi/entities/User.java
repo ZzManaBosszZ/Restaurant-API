@@ -18,13 +18,13 @@ import java.util.List;
 
 public class User extends BaseEntity implements UserDetails {
 
-    @Column(name = "FullName", nullable = false)
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @Column(name = "Email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "Password", nullable = false)
     private String password;
 
     @Column(name = "Phone")
