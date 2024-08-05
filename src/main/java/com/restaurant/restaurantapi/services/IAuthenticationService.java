@@ -1,0 +1,17 @@
+package com.restaurant.restaurantapi.services;
+
+import com.restaurant.restaurantapi.dtos.auth.JwtAuthenticationResponse;
+import com.restaurant.restaurantapi.dtos.UserDTO;
+import com.restaurant.restaurantapi.entities.User;
+import com.restaurant.restaurantapi.models.auth.*;
+
+public interface IAuthenticationService {
+    User signup(SignUpRequest signUpRequest);
+    JwtAuthenticationResponse signin(SignInRequest signInRequest);
+    JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
+    UserDTO profile(User currentUser);
+    void changePassword(ChangePasswordRequest changePasswordRequest, User user);
+    void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
+    void resetPassword(ResetPasswordRequest resetPasswordRequest, String token);
+
+}
