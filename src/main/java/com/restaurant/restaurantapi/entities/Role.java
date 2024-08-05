@@ -1,4 +1,7 @@
 package com.restaurant.restaurantapi.entities;
 
-public class example {
+public enum Role {
+    USER,
+    ADMIN
+
 }
