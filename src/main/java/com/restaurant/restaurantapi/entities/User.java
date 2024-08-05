@@ -47,6 +47,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "Address")
     private String Address;
 
+    @Column(name = "createdby")
+    private String createdBy;
+
     private String userType;
 
     @Override

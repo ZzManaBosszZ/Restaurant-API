@@ -5,10 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="251458e1-6839-432c-b770-06ce65723380" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/RestaurantApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/RestaurantApiApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/config/example.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/controllers/example.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/dtos/example.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/entities/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/entities/example.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/exceptions/example.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/models/example.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/repositories/example.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/services/example.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/services/impl/AuthenticationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/restaurant/restaurantapi/services/impl/AuthenticationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -98,7 +105,8 @@
       <workItem from="1722771194157" duration="479000" />
       <workItem from="1722771683846" duration="7118000" />
       <workItem from="1722779264813" duration="2492000" />
-      <workItem from="1722819117987" duration="2132000" />
+      <workItem from="1722819117987" duration="5047000" />
+      <workItem from="1722829876527" duration="30000" />
     </task>
     <servers />
   </component>
