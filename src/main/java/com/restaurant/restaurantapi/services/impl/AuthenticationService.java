@@ -30,9 +30,10 @@ public class AuthenticationService implements IAuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final IJWTService jwtService;
     private final MailService mailService;
+
 //    private static final String ALLOWED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-
+//
+//
 //    public static String generateRandomString(int length) {
 //        Random random = new Random();
 //        StringBuilder sb = new StringBuilder(length);
