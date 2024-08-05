@@ -22,12 +22,12 @@ public class AuthenticationController {
 
         private final IAuthenticationService authenticationService;
 
-        @PostMapping("/auth/user/signup")
+        @PostMapping("/auth/user/sign-up")
         public ResponseEntity<User> signup(@RequestBody SignUpRequest signUpRequest) {
             return ResponseEntity.ok(authenticationService.signup(signUpRequest));
         }
 
-        @PostMapping("/auth/user/signip")
+        @PostMapping("/auth/user/sign-in")
         public ResponseEntity<JwtAuthenticationResponse> signip(@RequestBody SignInRequest signInRequest) {
             return ResponseEntity.ok(authenticationService.signin(signInRequest));
         }
