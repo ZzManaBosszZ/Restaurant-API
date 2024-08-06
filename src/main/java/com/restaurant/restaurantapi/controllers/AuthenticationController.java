@@ -2,13 +2,15 @@ package com.restaurant.restaurantapi.controllers;
 
 
 import com.restaurant.restaurantapi.dtos.ResponseObject;
+import com.restaurant.restaurantapi.dtos.UpdateProfileUserRequest;
 import com.restaurant.restaurantapi.dtos.auth.JwtAuthenticationResponse;
 import com.restaurant.restaurantapi.dtos.UserDTO;
 import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import com.restaurant.restaurantapi.models.auth.*;
-import com.restaurant.restaurantapi.services.IAuthenticationService;
+import com.restaurant.restaurantapi.services.AuthenticationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +22,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-        private final IAuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
-        @PostMapping("/auth/user/signup")
-        public ResponseEntity<User> signup(@RequestBody SignUpRequest signUpRequest) {
-            return ResponseEntity.ok(authenticationService.signup(signUpRequest));
-        }
+    @PostMapping("/auth/user/signup")
+    public ResponseEntity<ResponseObject> signup(@RequestBody @Valid SignUpRequest signUpRequest) {
+        authenticationService.signup(signUpRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "Successfully signed up!", "")
+        );
+    }
 
-        @PostMapping("/auth/user/signip")
-        public ResponseEntity<JwtAuthenticationResponse> signip(@RequestBody SignInRequest signInRequest) {
+        @PostMapping("/auth/user/signin")
+        public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignInRequest signInRequest) {
             return ResponseEntity.ok(authenticationService.signin(signInRequest));
         }
 
@@ -81,6 +86,16 @@ public class AuthenticationController {
             @RequestBody ResetPasswordRequest resetPasswordRequest
     ) {
         authenticationService.resetPassword(resetPasswordRequest, token);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", "")
+        );
+    }
+
+    @PutMapping("/user/update-profile")
+    ResponseEntity<ResponseObject> updateProfile(@RequestBody UpdateProfileUserRequest updateProfileUserRequest) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        authenticationService.updateProfileUser(updateProfileUserRequest, currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", "")
         );

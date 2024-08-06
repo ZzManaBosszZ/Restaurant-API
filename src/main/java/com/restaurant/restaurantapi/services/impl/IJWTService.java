@@ -1,8 +1,6 @@
 package com.restaurant.restaurantapi.services.impl;
-
-
+import com.restaurant.restaurantapi.services.JWTService;
 import com.restaurant.restaurantapi.entities.User;
-import com.restaurant.restaurantapi.services.IJWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,7 +17,7 @@ import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
-public class JWTService implements IJWTService {
+public class IJWTService implements JWTService {
     public String generateToken(UserDetails userDetails){
         User user = (User) userDetails;
         return Jwts.builder().setSubject(userDetails.getUsername())
@@ -52,11 +50,11 @@ public class JWTService implements IJWTService {
     }
 
     private Claims extractAllClaims(String token) {
-            return Jwts.parserBuilder().setSigningKey(getSiginKey()).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(getSiginKey()).build().parseClaimsJws(token).getBody();
     }
 
     private Key getSiginKey() {
-        byte[] key = Decoders.BASE64.decode("hunganhdafgj23239HHIH864374HDISIHD");
+        byte[] key = Decoders.BASE64.decode("hunganhdafgjsgd98yutoeysdfnjhest23239HHIH864374HDISIHD");
         return Keys.hmacShaKeyFor(key);
     }
 

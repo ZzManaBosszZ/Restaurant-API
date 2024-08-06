@@ -1,8 +1,9 @@
 package com.restaurant.restaurantapi.config;
 
 
-import com.restaurant.restaurantapi.services.IUserService;
-import com.restaurant.restaurantapi.services.impl.JWTService;
+import com.restaurant.restaurantapi.services.JWTService;
+import com.restaurant.restaurantapi.services.impl.IUserService;
+
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

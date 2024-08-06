@@ -4,7 +4,8 @@ import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import com.restaurant.restaurantapi.repositories.UserRepository;
-import com.restaurant.restaurantapi.services.IUserService;
+
+import com.restaurant.restaurantapi.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService {
+public class IUserService implements UserService {
     private final UserRepository userRepository;
 
     @Override

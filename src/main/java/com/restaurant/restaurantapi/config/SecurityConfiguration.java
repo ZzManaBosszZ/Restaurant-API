@@ -1,7 +1,8 @@
 package com.restaurant.restaurantapi.config;
 
 import com.restaurant.restaurantapi.entities.Role;
-import com.restaurant.restaurantapi.services.IUserService;
+
+import com.restaurant.restaurantapi.services.impl.IUserService;
 import jakarta.servlet.MultipartConfigElement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -36,6 +37,7 @@ import java.util.Arrays;
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 public class SecurityConfiguration {
+
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final IUserService userService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
