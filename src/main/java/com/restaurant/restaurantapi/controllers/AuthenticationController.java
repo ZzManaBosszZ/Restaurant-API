@@ -32,31 +32,31 @@ public class AuthenticationController {
         );
     }
 
-        @PostMapping("/auth/user/signin")
-        public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignInRequest signInRequest) {
-            return ResponseEntity.ok(authenticationService.signin(signInRequest));
-        }
+    @PostMapping("/auth/user/signin")
+    public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SignInRequest signInRequest) {
+        return ResponseEntity.ok(authenticationService.signin(signInRequest));
+    }
 
-        @PostMapping("/auth/user/refresh")
-        public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-            return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
-        }
+    @PostMapping("/auth/user/refresh")
+    public ResponseEntity<JwtAuthenticationResponse> refresh(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
+    }
 
 
-        @GetMapping("/user/profile")
-        ResponseEntity<ResponseObject> profile() {
-            Authentication auth = SecurityContextHolder.getContext()
-                    .getAuthentication();
-            if (!(auth.getPrincipal() instanceof User)) {
-                throw new AppException(ErrorCode.NOTFOUND);
-            }
-            if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
-            User currentUser = (User) auth.getPrincipal();
-            UserDTO userDTO = authenticationService.profile(currentUser);
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject(true, 200, "ok", userDTO)
-            );
+    @GetMapping("/user/profile")
+    ResponseEntity<ResponseObject> profile() {
+        Authentication auth = SecurityContextHolder.getContext()
+                .getAuthentication();
+        if (!(auth.getPrincipal() instanceof User)) {
+            throw new AppException(ErrorCode.NOTFOUND);
         }
+        if (auth == null) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        User currentUser = (User) auth.getPrincipal();
+        UserDTO userDTO = authenticationService.profile(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", userDTO)
+        );
+    }
     @PostMapping("/user/change-password")
     public ResponseEntity<ResponseObject> changepassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
         Authentication auth = SecurityContextHolder.getContext()
@@ -100,5 +100,4 @@ public class AuthenticationController {
                 new ResponseObject(true, 200, "ok", "")
         );
     }
-    }
-
+}

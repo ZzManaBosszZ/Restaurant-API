@@ -1,8 +1,9 @@
+
 package com.restaurant.restaurantapi.config;
 
 import com.restaurant.restaurantapi.entities.Role;
 
-import com.restaurant.restaurantapi.services.impl.IUserService;
+import com.restaurant.restaurantapi.services.IUserService;
 import jakarta.servlet.MultipartConfigElement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -37,7 +38,6 @@ import java.util.Arrays;
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 public class SecurityConfiguration {
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final IUserService userService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -61,7 +61,7 @@ public class SecurityConfiguration {
                     configuration.applyPermitDefaultValues();
                     return configuration;*/
                     CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://127.0.0.1:5500"));
+                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://127.0.0.1:3306"));
                     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
