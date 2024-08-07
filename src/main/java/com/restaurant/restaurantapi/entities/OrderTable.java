@@ -9,15 +9,13 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "order_table")
 @Builder
 public class OrderTable extends BaseEntity {
     @Column(name = "name", length = 255)
     private String name;
-
-    @Column(name = "menu_id")
-    private Integer menuId;
 
     @Column(name = "number_of_person")
     private Integer numberOfPerson;
