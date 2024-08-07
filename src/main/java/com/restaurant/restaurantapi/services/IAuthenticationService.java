@@ -10,9 +10,7 @@ import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import com.restaurant.restaurantapi.models.auth.*;
 import com.restaurant.restaurantapi.models.mail.MailStructure;
 import com.restaurant.restaurantapi.repositories.UserRepository;
-<<<<<<< HEAD
-=======
->>>>>>> main
+
 import com.restaurant.restaurantapi.services.impl.JWTService;
 import com.restaurant.restaurantapi.services.impl.MailService;
 import lombok.RequiredArgsConstructor;
