@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "wishlist")
 @Builder
 public class Wishlist extends BaseEntity {
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
