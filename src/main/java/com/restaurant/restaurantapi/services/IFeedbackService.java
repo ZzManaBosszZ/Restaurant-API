@@ -48,10 +48,10 @@ public class IFeedbackService implements FeedbackService {
                 .email(createFeedback.getEmail())
                 .phone(createFeedback.getPhone())
                 .message(createFeedback.getMessage())
-//                .createdBy(user.getFullName())
-//                .modifiedBy(user.getFullName())
-//                .createdDate(new Timestamp(System.currentTimeMillis()))
-//                .modifiedDate(new Timestamp(System.currentTimeMillis()))
+                .createdBy(user.getFullName())
+                .modifiedBy(user.getFullName())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
 
         feedbackRepository.save(feedback);

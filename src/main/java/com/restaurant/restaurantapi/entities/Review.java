@@ -11,18 +11,21 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "review")
-@Builder
+@SuperBuilder
+@ToString
 public class Review extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
+    @ToString.Exclude
     private Food food;
 
     @Column(name = "rating", nullable = false)
-    private Double rating; // nhớ sửa lại Database thành double
+    private Double rating;
 
     @Column(name = "message")
     private String message;

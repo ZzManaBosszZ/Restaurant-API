@@ -9,20 +9,27 @@ import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import com.restaurant.restaurantapi.mappers.FoodMapper;
 import com.restaurant.restaurantapi.models.food.CreateFood;
 import com.restaurant.restaurantapi.models.food.EditFood;
+import com.restaurant.restaurantapi.repositories.CategoryRepository;
 import com.restaurant.restaurantapi.repositories.FoodRepository;
+import com.restaurant.restaurantapi.repositories.UserRepository;
+import com.restaurant.restaurantapi.services.impl.CategoryService;
 import com.restaurant.restaurantapi.services.impl.FoodService;
+import com.restaurant.restaurantapi.services.impl.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class IFoodService implements FoodService {
     private final FoodRepository foodRepository;
     private final FoodMapper foodMapper;
+    private final StorageService storageService;
+    private final CategoryRepository categoryRepository;
+    private final UserRepository UserRepository;
 
     @Override
     public FoodDTO create(CreateFood createFood, User user) {
@@ -30,38 +37,44 @@ public class IFoodService implements FoodService {
         if (existingFood != null) {
             throw new AppException(ErrorCode.FOOD_EXISTED);
         }
+        Category category = categoryRepository.findById(createFood.getCategoryId())
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOTFOUND));
+        String generatedFileName = storageService.storeFile(createFood.getImage());
         Food food = Food.builder()
                 .name(createFood.getName())
-                .image(createFood.getImage())
+                .image("http://localhost:8080/api/v1/FileUpload/files/" + generatedFileName)
                 .price(createFood.getPrice())
                 .description(createFood.getDescription())
                 .quantity(createFood.getQuantity())
                 .star(0.0)
                 .createdBy(user.getUsername())
+                .category(category)
+                .user(user)
+                .reviews(new ArrayList<>())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedBy(user.getUsername())
                 .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
-
         food = foodRepository.save(food);
         return foodMapper.toFoodDTO(food);
     }
 
     @Override
     public FoodDTO update(EditFood editFood, User user) {
-        Optional<Food> foodOptional = foodRepository.findById(editFood.getId());
-        if (!foodOptional.isPresent()) {
-            throw new AppException(ErrorCode.FOOD_NOTFOUND);
+        Food food = foodRepository.findById(editFood.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
+        String imageUrl = food.getImage(); // Preserve existing image URL
+        if (editFood.getImage() != null && !editFood.getImage().isEmpty()) {
+            String generatedFileName = storageService.storeFile(editFood.getImage());
+            imageUrl = "http://localhost:8080/api/v1/FileUpload/files/" + generatedFileName;
         }
-        Food food = foodOptional.get();
         food.setName(editFood.getName());
-        food.setImage(editFood.getImage());
+        food.setImage(imageUrl);
         food.setPrice(editFood.getPrice());
         food.setDescription(editFood.getDescription());
         food.setQuantity(editFood.getQuantity());
         food.setModifiedBy(user.getUsername());
         food.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-
         food = foodRepository.save(food);
         return foodMapper.toFoodDTO(food);
     }
@@ -69,7 +82,11 @@ public class IFoodService implements FoodService {
     @Override
     public void delete(Long[] ids) {
         for (Long id : ids) {
-            foodRepository.deleteById(id);
+            if (foodRepository.existsById(id)) {
+                foodRepository.deleteById(id);
+            } else {
+                throw new AppException(ErrorCode.FOOD_NOTFOUND);
+            }
         }
     }
 
@@ -82,32 +99,28 @@ public class IFoodService implements FoodService {
 
     @Override
     public List<FoodDTO> findAll() {
-        List<Food> foods = foodRepository.findAll();
-        return foods.stream()
+        return foodRepository.findAll().stream()
                 .map(foodMapper::toFoodDTO)
                 .toList();
     }
 
     @Override
     public List<FoodDTO> findAllByCategoryId(Long categoryId) {
-        List<Food> foods = foodRepository.findAllByCategoryId(categoryId);
-        return foods.stream()
+        return foodRepository.findAllByCategoryId(categoryId).stream()
                 .map(foodMapper::toFoodDTO)
                 .toList();
     }
 
     @Override
     public List<FoodDTO> findAllByPriceGreaterThan(Double price) {
-        List<Food> foods = foodRepository.findAllByPriceGreaterThan(price);
-        return foods.stream()
+        return foodRepository.findAllByPriceGreaterThan(price).stream()
                 .map(foodMapper::toFoodDTO)
                 .toList();
     }
 
     @Override
     public List<FoodDTO> findAllByPriceLessThan(Double price) {
-        List<Food> foods = foodRepository.findAllByPriceLessThan(price);
-        return foods.stream()
+        return foodRepository.findAllByPriceLessThan(price).stream()
                 .map(foodMapper::toFoodDTO)
                 .toList();
     }

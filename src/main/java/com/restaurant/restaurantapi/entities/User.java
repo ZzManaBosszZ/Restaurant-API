@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,8 +17,11 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "user")
 @Entity
-
+@ToString
 public class User extends BaseEntity implements UserDetails {
+
+    @Column(name = "code", nullable = false, length = 12)
+    private String code;
 
     @Column(name = "full_name", nullable = false)
     private String fullName;
@@ -53,16 +57,24 @@ public class User extends BaseEntity implements UserDetails {
 
     private String userType;
 
+<<<<<<< Updated upstream
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+=======
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    @ToString.Exclude
+>>>>>>> Stashed changes
     private List<Wishlist> wishlists;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
+    @ToString.Exclude
     private List<Orders> orders;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
+    @ToString.Exclude
     private List<Review> reviews;
 
     @Override
@@ -93,6 +105,11 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
+    }
+
+    @Override
+    public Long getId() {
+        return super.getId();
     }
 
 }

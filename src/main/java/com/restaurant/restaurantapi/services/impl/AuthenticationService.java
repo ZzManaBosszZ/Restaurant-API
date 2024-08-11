@@ -1,4 +1,4 @@
-package com.restaurant.restaurantapi.services;
+package com.restaurant.restaurantapi.services.impl;
 
 
 import com.restaurant.restaurantapi.dtos.UpdateProfileUserRequest;

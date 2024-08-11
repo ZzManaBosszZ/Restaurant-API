@@ -15,14 +15,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
-@RequiredArgsConstructor
+
 public class FoodController {
 
+    public FoodController(FoodService foodService){
+        this.foodService = foodService;
+
+    }
     private final FoodService foodService;
 
     @GetMapping("/any/food")
@@ -66,14 +71,28 @@ public class FoodController {
     }
 
     @PostMapping("/food")
-    public ResponseEntity<ResponseObject> create(@Valid @RequestBody CreateFood createFood) {
+    public ResponseEntity<ResponseObject> create(
+                                                 @RequestParam("name") String name,
+                                                 @RequestParam("price") Double price,
+                                                 @RequestParam("description") String description,
+                                                 @RequestParam("quantity") int quantity,
+                                                 @RequestParam("categoryId") int categoryId,
+                                                 @RequestParam("image") MultipartFile image) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
-        FoodDTO foodDTO = foodService.create(createFood, currentUser);
+        CreateFood createFood = new CreateFood();
+        createFood.setCategoryId(categoryId);
+        createFood.setName(name);
+        createFood.setQuantity(quantity);
+        createFood.setDescription(description);
+        createFood.setPrice(price);
+        createFood.setImage(image);
+        foodService.create(createFood,currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "Create Success", foodDTO)
+                new ResponseObject(true, 200, "Create Success", "")
         );
     }
+
 
     @PutMapping("/food")
     public ResponseEntity<ResponseObject> update(@Valid @RequestBody EditFood editFood) {

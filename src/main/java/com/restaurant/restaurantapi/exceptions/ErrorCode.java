@@ -9,9 +9,11 @@ public enum ErrorCode {
     //feedback
     FEEDBACK_NOTFOUND(404, "Feedback Not Found", HttpStatus.NOT_FOUND),
     FEEDBACK_EXISTED(400, "Feedback with this email already exists", HttpStatus.BAD_REQUEST),
-
+    UNAUTHORIZED (400,"You are not authorized to delete this wishlist.",HttpStatus.BAD_REQUEST) ,
     USER_NOT_FOUND (404, "User Not Found", HttpStatus.NOT_FOUND),
     REVIEW_NOT_FOUND (404, "Review Not Found", HttpStatus.NOT_FOUND),
+    MENU_NOTFOUND (404, "Menu Not Found", HttpStatus.NOT_FOUND),
+    ORDER_NOT_FOUND (404, "Order Not Found", HttpStatus.NOT_FOUND),
 
     FOOD_NOTFOUND(404, "Food Not Found", HttpStatus.NOT_FOUND),
     FOOD_EXISTED (400, "Food with this  already exists", HttpStatus.BAD_REQUEST),

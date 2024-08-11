@@ -11,13 +11,13 @@ import com.restaurant.restaurantapi.models.review.CreateReview;
 import com.restaurant.restaurantapi.repositories.FoodRepository;
 import com.restaurant.restaurantapi.repositories.ReviewRepository;
 import com.restaurant.restaurantapi.repositories.UserRepository;
-
 import com.restaurant.restaurantapi.services.impl.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,37 +44,25 @@ public class IReviewService implements ReviewService {
                 .message(model.getMessage())
                 .user(user)
                 .food(food)
-//                .createdBy(user.getUsername())
-//                .createdDate(new Timestamp(System.currentTimeMillis()))
-//                .modifiedBy(user.getUsername())
-//                .modifiedDate(new Timestamp(System.currentTimeMillis()))
+                .createdBy(user.getUsername())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .modifiedBy(user.getUsername())
+                .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
 
         review = reviewRepository.save(review);
         return reviewMapper.toReviewDTO(review);
     }
 
-//    @Override
-//    public ReviewDTO update(EditReview model, Long userId) {
-//        Review review = reviewRepository.findById(model.getId())
-//                .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
-//
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-//
-//        review.setRating(model.getRating());
-//        review.setMessage(model.getMessage());
-//        review.setModifiedBy(user.getUsername());
-//        review.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-//
-//        review = reviewRepository.save(review);
-//        return reviewMapper.toReviewDTO(review);
-//    }
-
     @Override
     public void delete(Long[] ids) {
         for (Long id : ids) {
-            reviewRepository.deleteById(id);
+            Optional<Review> reviewOptional = reviewRepository.findById(id);
+            if (reviewOptional.isPresent()) {
+                reviewRepository.deleteById(id);
+            } else {
+                throw new AppException(ErrorCode.REVIEW_NOT_FOUND);
+            }
         }
     }
 
@@ -87,16 +75,14 @@ public class IReviewService implements ReviewService {
 
     @Override
     public List<ReviewDTO> findAll() {
-        List<Review> reviews = reviewRepository.findAll();
-        return reviews.stream()
+        return reviewRepository.findAll().stream()
                 .map(reviewMapper::toReviewDTO)
                 .toList();
     }
 
     @Override
     public List<ReviewDTO> findAllByFoodId(Long foodId) {
-        List<Review> reviews = reviewRepository.findAllByFoodId(foodId);
-        return reviews.stream()
+        return reviewRepository.findAllByFoodId(foodId).stream()
                 .map(reviewMapper::toReviewDTO)
                 .toList();
     }
@@ -105,8 +91,7 @@ public class IReviewService implements ReviewService {
     public List<ReviewDTO> findAllByFood(Long foodId) {
         Food food = foodRepository.findById(foodId)
                 .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
-        List<Review> reviews = reviewRepository.findAllByFood(food);
-        return reviews.stream()
+        return reviewRepository.findAllByFood(food).stream()
                 .map(reviewMapper::toReviewDTO)
                 .toList();
     }

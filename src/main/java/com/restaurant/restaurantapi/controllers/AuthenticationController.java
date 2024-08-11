@@ -9,7 +9,7 @@ import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import com.restaurant.restaurantapi.models.auth.*;
-import com.restaurant.restaurantapi.services.AuthenticationService;
+import com.restaurant.restaurantapi.services.impl.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
