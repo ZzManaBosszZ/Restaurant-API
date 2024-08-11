@@ -57,14 +57,10 @@ public class User extends BaseEntity implements UserDetails {
 
     private String userType;
 
-<<<<<<< Updated upstream
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-=======
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @ToString.Exclude
->>>>>>> Stashed changes
+
     private List<Wishlist> wishlists;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
