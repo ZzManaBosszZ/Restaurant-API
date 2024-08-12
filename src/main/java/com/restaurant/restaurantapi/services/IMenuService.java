@@ -35,11 +35,9 @@ public class IMenuService implements MenuService {
     @Override
     public MenuDTO update(EditMenu editMenu) {
         Optional<Menu> menuOptional = menuRepository.findById(editMenu.getId());
-        if (!menuOptional.isPresent()) {
-            // Handle not found scenario
+        if (menuOptional.isEmpty()) {
             throw new AppException(ErrorCode.MENU_NOTFOUND);
         }
-
         Menu menu = menuOptional.get();
         menu.setName(editMenu.getName());
         menu.setDescription(editMenu.getDescription());

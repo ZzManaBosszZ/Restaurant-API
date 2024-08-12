@@ -2,6 +2,7 @@ package com.restaurant.restaurantapi.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "order_detail")
-@Builder
+@SuperBuilder
 public class OrderDetail extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")

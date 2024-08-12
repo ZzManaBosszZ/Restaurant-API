@@ -59,7 +59,6 @@ public class ICategory implements CategoryService {
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOTFOUND));
         Category categoryExisting1 = categoryRepository.findBySlug(editCategory.getName().toLowerCase().replace(" ", "-"));
         if (categoryExisting1 != null) throw new AppException(ErrorCode.CATEGORY_EXISTED);
-
         categoryExisting.setName(editCategory.getName());
         categoryExisting.setSlug(editCategory.getName().toLowerCase().replace(" ", "-"));
         categoryRepository.save(categoryExisting);

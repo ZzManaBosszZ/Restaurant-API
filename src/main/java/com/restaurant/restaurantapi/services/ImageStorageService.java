@@ -9,7 +9,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -34,7 +33,8 @@ public class ImageStorageService implements StorageService {
 
     private boolean isImageFile(MultipartFile file) {
         String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
-        return Arrays.asList(new String[] {"png", "jpg", "jpge", "bmp"})
+
+        return Arrays.asList(new String[] {"png", "jpg", "jpg", "bmp"})
                 .contains(fileExtension.trim().toLowerCase());
     }
     @Override

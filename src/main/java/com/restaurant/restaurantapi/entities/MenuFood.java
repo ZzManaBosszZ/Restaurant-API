@@ -2,6 +2,7 @@ package com.restaurant.restaurantapi.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
@@ -9,7 +10,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "menu_food")
-@Builder
+@SuperBuilder
 public class MenuFood extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")

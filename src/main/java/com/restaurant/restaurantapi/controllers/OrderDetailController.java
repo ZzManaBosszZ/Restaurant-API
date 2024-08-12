@@ -1,9 +1,9 @@
 package com.restaurant.restaurantapi.controllers;
 
 import com.restaurant.restaurantapi.dtos.orderdetail.OrderDetailDTO;
+
 import com.restaurant.restaurantapi.services.impl.OrderDetailService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,14 +11,20 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/order-details")
-@RequiredArgsConstructor
 public class OrderDetailController {
 
-    private final OrderDetailService orderDetailService;
+    @Autowired
+    private OrderDetailService orderDetailService;
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<List<OrderDetailDTO>> getOrderDetailsByOrderId(@PathVariable("orderId") Long orderId) {
-        List<OrderDetailDTO> orderDetailDTOs = orderDetailService.getOrderDetailsByOrderId(orderId);
-        return ResponseEntity.ok(orderDetailDTOs);
+    public ResponseEntity<List<OrderDetailDTO>> getOrderDetailsByOrderId(@PathVariable Long orderId) {
+        List<OrderDetailDTO> orderDetails = orderDetailService.findByOrderId(orderId);
+        return ResponseEntity.ok(orderDetails);
+    }
+
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<OrderDetailDTO> getOrderDetailById(@PathVariable Long id) {
+        OrderDetailDTO orderDetail = orderDetailService.findById(id);
+        return ResponseEntity.ok(orderDetail);
     }
 }

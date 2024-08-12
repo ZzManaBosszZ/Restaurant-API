@@ -9,7 +9,7 @@ import com.restaurant.restaurantapi.mappers.FeedbackMapper;
 import com.restaurant.restaurantapi.models.feedback.CreateFeedback;
 import com.restaurant.restaurantapi.repositories.FeedbackRepository;
 import com.restaurant.restaurantapi.services.impl.FeedbackService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -17,13 +17,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class IFeedbackService implements FeedbackService {
 
-    @Autowired
-    private FeedbackRepository feedbackRepository;
 
-    @Autowired
-    private FeedbackMapper feedbackMapper;
+    private final FeedbackRepository feedbackRepository;
+    private final FeedbackMapper feedbackMapper;
 
     @Override
     public List<FeedbackDTO> findAll() {
@@ -57,27 +56,6 @@ public class IFeedbackService implements FeedbackService {
         feedbackRepository.save(feedback);
         return feedbackMapper.toFeedbackDTO(feedback);
     }
-
-//    @Override
-//    public FeedbackDTO update(EditFeedback editFeedback, User user) {
-//        Feedback existingFeedback = feedbackRepository.findById(editFeedback.getId())
-//                .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOTFOUND));
-//
-//        Feedback feedbackWithSameEmail = feedbackRepository.findByEmail(editFeedback.getEmail());
-//        if (feedbackWithSameEmail != null && !feedbackWithSameEmail.getId().equals(editFeedback.getId())) {
-//            throw new AppException(ErrorCode.FEEDBACK_EXISTED);
-//        }
-//
-//        existingFeedback.setName(editFeedback.getName());
-//        existingFeedback.setEmail(editFeedback.getEmail());
-//        existingFeedback.setPhone(editFeedback.getPhone());
-//        existingFeedback.setMessage(editFeedback.getMessage());
-//        existingFeedback.setModifiedBy(user.getFullName());
-//        existingFeedback.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-//
-//        feedbackRepository.save(existingFeedback);
-//        return feedbackMapper.toFeedbackDTO(existingFeedback);
-//    }
 
     @Override
     public void delete(Long[] ids) {

@@ -1,15 +1,14 @@
-package com.restaurant.restaurantapi.models.wishlist;
+package com.restaurant.restaurantapi.models.menufood;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateWishlistModel {
-//    private Long userId;
+public class EditMenuFood {
+    private Long id;
+    private Long menuId;
     private Long foodId;
 }

@@ -11,4 +11,5 @@ public class CreateOrderDetail {
     private BigDecimal unitPrice;
     private BigDecimal discount;
 
+
 }

@@ -41,7 +41,6 @@ public class CategoryController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
         CategoryDTO categoryDTO = categoryService.create(createCategory, currentUser);
-        categoryDTO.setId(1L);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "Create Success", categoryDTO)
         );
