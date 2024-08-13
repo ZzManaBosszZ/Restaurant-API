@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,11 +27,12 @@ public class Orders extends BaseEntity {
     private BigDecimal total;
 
     @Column(name = "is_paid")
-    private Boolean isPaid;
+    @Enumerated(EnumType.STRING)
+    private OrderIsPaid isPaid;
 
     @Column(name = "status")
     private Integer status;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 }

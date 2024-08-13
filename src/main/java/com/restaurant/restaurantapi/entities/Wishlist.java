@@ -12,12 +12,15 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "wishlist")
 @Builder
+@ToString
 public class Wishlist extends BaseEntity {
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "food_id")
+    @ToString.Exclude
     private Food food;
 }
