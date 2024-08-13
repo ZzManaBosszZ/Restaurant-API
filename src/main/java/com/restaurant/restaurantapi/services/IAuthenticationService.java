@@ -130,7 +130,7 @@ public class IAuthenticationService implements AuthenticationService {
         calendar.add(Calendar.HOUR_OF_DAY, 1);
         String resetToken = generateResetToken();
         user.setResetToken(resetToken);
-        user.setResetTokenExpiry((java.sql.Date) calendar.getTime());
+        user.setResetTokenExpiry(new java.sql.Date(calendar.getTime().getTime()));
         userRepository.save(user);
 
         String resetLink = "http://localhost:3001/reset-password/" + resetToken;
