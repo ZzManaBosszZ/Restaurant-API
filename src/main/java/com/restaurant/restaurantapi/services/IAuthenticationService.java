@@ -1,4 +1,4 @@
-package com.restaurant.restaurantapi.services.impl;
+package com.restaurant.restaurantapi.services;
 
 import com.restaurant.restaurantapi.dtos.UpdateProfileUserRequest;
 import com.restaurant.restaurantapi.dtos.auth.JwtAuthenticationResponse;
@@ -10,8 +10,10 @@ import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import com.restaurant.restaurantapi.models.auth.*;
 import com.restaurant.restaurantapi.models.mail.MailStructure;
 import com.restaurant.restaurantapi.repositories.UserRepository;
-import com.restaurant.restaurantapi.services.AuthenticationService;
-import com.restaurant.restaurantapi.services.MailService;
+
+import com.restaurant.restaurantapi.services.impl.AuthenticationService;
+import com.restaurant.restaurantapi.services.impl.JWTService;
+import com.restaurant.restaurantapi.services.impl.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +32,18 @@ public class IAuthenticationService implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     private final MailService mailService;
+    private static final String ALLOWED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    public static String generateRandomString(int length) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(ALLOWED_CHARACTERS.length());
+            sb.append(ALLOWED_CHARACTERS.charAt(randomIndex));
+        }
+        return sb.toString();
+    }
+
     @Override
     public void signup(SignUpRequest signUpRequest) {
         Optional<User> userExiting = userRepository.findByEmail(signUpRequest.getEmail());
@@ -37,7 +51,7 @@ public class IAuthenticationService implements AuthenticationService {
 
         } else {
             User user = new User();
-
+            user.setCode(generateRandomString(8));
             user.setFullName(signUpRequest.getFullname());
             user.setEmail(signUpRequest.getEmail());
             user.setRole(Role.USER);

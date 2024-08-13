@@ -2,6 +2,7 @@ package com.restaurant.restaurantapi.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Data
 @NoArgsConstructor
@@ -9,7 +10,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "feedback")
-@Builder
+@SuperBuilder
 public class Feedback extends BaseEntity {
     @Column(name = "name", length = 255)
     private String name;

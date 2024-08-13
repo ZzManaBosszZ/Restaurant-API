@@ -2,6 +2,7 @@ package com.restaurant.restaurantapi.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.sql.Time;
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "order_table")
-@Builder
+@SuperBuilder
 public class OrderTable extends BaseEntity {
     @Column(name = "name", length = 255)
     private String name;
