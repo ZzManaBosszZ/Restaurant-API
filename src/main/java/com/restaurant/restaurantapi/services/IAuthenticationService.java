@@ -148,7 +148,7 @@ public class IAuthenticationService implements AuthenticationService {
 
         Date now = new Date();
 
-        if (token == null || !user.getResetToken().equals(token) || !user.getEmail().equals(resetPasswordRequest.getEmail()) || user.getResetTokenExpiry().before(now))
+        if (!user.getResetToken().equals(token) || !user.getEmail().equals(resetPasswordRequest.getEmail()) || user.getResetTokenExpiry().before(now))
         {
             throw new AppException(ErrorCode.INVALID_RESETTOKEN);
         }

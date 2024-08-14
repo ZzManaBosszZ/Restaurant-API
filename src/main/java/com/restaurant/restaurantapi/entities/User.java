@@ -73,6 +73,8 @@ public class User extends BaseEntity implements UserDetails {
     @ToString.Exclude
     private List<Review> reviews;
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
