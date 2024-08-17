@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "menu_food")
+@Table(name = "menufood")
 @SuperBuilder
 public class MenuFood extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
