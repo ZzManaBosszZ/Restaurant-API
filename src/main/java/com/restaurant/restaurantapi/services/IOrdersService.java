@@ -1,6 +1,5 @@
 package com.restaurant.restaurantapi.services;
-import org.springframework.security.core.Authentication;
-import com.restaurant.restaurantapi.entities.OrderIsPaid;
+import com.restaurant.restaurantapi.entities.OrderStatus;
 import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
 import com.restaurant.restaurantapi.entities.Orders;
@@ -10,15 +9,12 @@ import com.restaurant.restaurantapi.models.orders.CreateOrders;
 import com.restaurant.restaurantapi.repositories.OrdersRepository;
 import com.restaurant.restaurantapi.repositories.UserRepository;
 import com.restaurant.restaurantapi.services.impl.OrdersService;
-import com.restaurant.restaurantapi.services.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -43,10 +39,9 @@ import java.util.stream.Collectors;
         Orders order = Orders.builder()
                 .orderCode(orderCode)
                 .total(createOrders.getTotal())
-                .isPaid(OrderIsPaid.pending)
-                .status(createOrders.getStatus())
+                .isPaid(false)
+                .status(OrderStatus.pending)
                 .user(user)
-//                .orderDetails(new ArrayList<>())
                 .createdBy(user.getFullName())
                 .modifiedBy(user.getFullName())
                 .createdDate(new Timestamp(System.currentTimeMillis()))

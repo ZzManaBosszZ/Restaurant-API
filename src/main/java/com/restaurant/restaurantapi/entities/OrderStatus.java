@@ -1,6 +1,6 @@
 package com.restaurant.restaurantapi.entities;
 
-public enum  OrderIsPaid {
+public enum OrderStatus {
     pending,
     confirmed,
     process,

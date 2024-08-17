@@ -1,5 +1,6 @@
 package com.restaurant.restaurantapi.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -27,11 +28,17 @@ public class Orders extends BaseEntity {
     private BigDecimal total;
 
     @Column(name = "is_paid")
-    @Enumerated(EnumType.STRING)
-    private OrderIsPaid isPaid;
+    private boolean isPaid;
 
     @Column(name = "status")
-    private Integer status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Payment payment;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails = new ArrayList<>();

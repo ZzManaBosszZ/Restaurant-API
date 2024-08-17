@@ -16,6 +16,7 @@ public enum ErrorCode {
     ORDER_NOT_FOUND (404, "Order Not Found", HttpStatus.NOT_FOUND),
     ORDER_DETAIL_NOT_FOUND (404, "Order Detail Not Found", HttpStatus.NOT_FOUND),
     MENU_FOOD_NOTFOUND (404, "Menu Food Not Found", HttpStatus.NOT_FOUND),
+    ALREADY_PAID( 400,"Payment already exists for this order", HttpStatus.NOT_FOUND) ,
 
     FOOD_NOTFOUND(404, "Food Not Found", HttpStatus.NOT_FOUND),
     FOOD_EXISTED (400, "Food with this  already exists", HttpStatus.BAD_REQUEST),
@@ -90,6 +91,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     FORBIDDEN(403, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_RESETTOKEN(400, "Invalid or expired reset token", HttpStatus.NOT_FOUND),
+    FILE_UPLOAD_FAILED (400, "File upload failed", HttpStatus.INTERNAL_SERVER_ERROR),
 
 
     ;

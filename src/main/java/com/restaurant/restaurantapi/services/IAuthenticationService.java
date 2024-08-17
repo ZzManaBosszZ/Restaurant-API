@@ -20,9 +20,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 import java.sql.Timestamp;
 import java.util.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -48,7 +48,6 @@ public class IAuthenticationService implements AuthenticationService {
     public void signup(SignUpRequest signUpRequest) {
         Optional<User> userExiting = userRepository.findByEmail(signUpRequest.getEmail());
         if (userExiting.isPresent()) {
-
         } else {
             User user = new User();
             user.setCode(generateRandomString(8));
@@ -120,18 +119,39 @@ public class IAuthenticationService implements AuthenticationService {
         userRepository.save(user);
     }
 
+//    @Override
+//    public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
+//        User user = userRepository.findByEmail(forgotPasswordRequest.getEmail())
+//                .orElseThrow(() -> new AppException(ErrorCode.USER_NOTFOUND));
+//        Date now = new Date();
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(now);
+//        calendar.add(Calendar.HOUR_OF_DAY, 1);
+//        String resetToken = generateResetToken();
+//        user.setResetToken(resetToken);
+//        user.setResetTokenExpiry(new java.sql.Date(calendar.getTime().getTime()));
+//        userRepository.save(user);
+//
+//        String resetLink = "http://localhost:3001/reset-password/" + resetToken;
+//
+//        MailStructure mailStructure = new MailStructure();
+//        mailStructure.setSubject("Password Reset");
+//        mailStructure.setMessage("Click the link to reset your password: " + resetLink);
+//        mailService.sendMail(forgotPasswordRequest.getEmail(), mailStructure);
+//    }
     @Override
     public void forgotPassword(ForgotPasswordRequest forgotPasswordRequest) {
         User user = userRepository.findByEmail(forgotPasswordRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOTFOUND));
+        String resetToken = generateResetToken();
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
         calendar.add(Calendar.HOUR_OF_DAY, 1);
-        String resetToken = generateResetToken();
         user.setResetToken(resetToken);
         user.setResetTokenExpiry(new java.sql.Date(calendar.getTime().getTime()));
         userRepository.save(user);
+
 
         String resetLink = "http://localhost:3001/reset-password/" + resetToken;
 
@@ -141,15 +161,16 @@ public class IAuthenticationService implements AuthenticationService {
         mailService.sendMail(forgotPasswordRequest.getEmail(), mailStructure);
     }
 
+
     @Override
     public void resetPassword(ResetPasswordRequest resetPasswordRequest, String token) {
         User user = userRepository.findByEmail(resetPasswordRequest.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOTFOUND));
-
+        if (user.getResetToken() == null || !user.getResetToken().equals(token)) {
+            throw new AppException(ErrorCode.INVALID_RESETTOKEN);
+        }
         Date now = new Date();
-
-        if (token == null || !user.getResetToken().equals(token) || !user.getEmail().equals(resetPasswordRequest.getEmail()) || user.getResetTokenExpiry().before(now))
-        {
+        if (user.getResetTokenExpiry() == null || user.getResetTokenExpiry().before(now)) {
             throw new AppException(ErrorCode.INVALID_RESETTOKEN);
         }
 
