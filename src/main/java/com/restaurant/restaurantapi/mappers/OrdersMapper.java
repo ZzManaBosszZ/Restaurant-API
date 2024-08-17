@@ -20,7 +20,7 @@ public class OrdersMapper {
                 .orderCode(model.getOrderCode())
                 .total(model.getTotal())
                 .status(model.getStatus())
-                .isPaid(model.getIsPaid())
+                .isPaid(model.isPaid())
                 .createdDate(model.getCreatedDate())
                 .createdBy(model.getCreatedBy())
                 .modifiedBy(model.getModifiedBy())

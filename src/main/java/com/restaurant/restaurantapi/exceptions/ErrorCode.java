@@ -91,6 +91,7 @@ public enum ErrorCode {
     UNAUTHENTICATED(401, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     FORBIDDEN(403, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_RESETTOKEN(400, "Invalid or expired reset token", HttpStatus.NOT_FOUND),
+    FILE_UPLOAD_FAILED (400, "File upload failed", HttpStatus.INTERNAL_SERVER_ERROR),
 
 
     ;
