@@ -12,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "order_table")
+@Table(name = "ordertable")
 @SuperBuilder
 public class OrderTable extends BaseEntity {
     @Column(name = "name", length = 255)

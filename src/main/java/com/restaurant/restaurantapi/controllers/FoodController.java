@@ -94,15 +94,41 @@ public class FoodController {
     }
 
 
+//    @PutMapping("/food")
+//    public ResponseEntity<ResponseObject> update(@Valid @RequestBody EditFood editFood) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        User currentUser = (User) auth.getPrincipal();
+//        FoodDTO foodDTO = foodService.update(editFood, currentUser);
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                new ResponseObject(true, 200, "Update Success", foodDTO)
+//        );
+//    }
+
     @PutMapping("/food")
-    public ResponseEntity<ResponseObject> update(@Valid @RequestBody EditFood editFood) {
+    public ResponseEntity<ResponseObject> update(
+            @RequestParam("id") Long id,
+            @RequestParam("name") String name,
+            @RequestParam("price") Double price,
+            @RequestParam("description") String description,
+            @RequestParam("quantity") int quantity,
+            @RequestParam("categoryId") long categoryId,
+            @RequestParam(value = "image", required = false) MultipartFile image) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
+        EditFood editFood = new EditFood();
+        editFood.setId(id);
+        editFood.setName(name);
+        editFood.setPrice(price);
+        editFood.setDescription(description);
+        editFood.setQuantity(quantity);
+        editFood.setCategoryId(categoryId);
+        editFood.setImage(image);
         FoodDTO foodDTO = foodService.update(editFood, currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "Update Success", foodDTO)
         );
     }
+
 
     @DeleteMapping("/food")
     public ResponseEntity<ResponseObject> delete(@RequestBody Long[] ids) {

@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "order_detail")
+@Table(name = "orderdetail")
 @SuperBuilder
 public class OrderDetail extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)

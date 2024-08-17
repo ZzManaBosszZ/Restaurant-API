@@ -2,6 +2,7 @@ package com.restaurant.restaurantapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -21,6 +22,7 @@ public class Food extends BaseEntity {
     private String name;
 
     @Column(name = "image", nullable = false)
+    @Pattern(regexp = "^(http|https)://.*$", message = "Image URL should be a valid URL")
     private String image;
 
     @Column(name = "price", nullable = false)
