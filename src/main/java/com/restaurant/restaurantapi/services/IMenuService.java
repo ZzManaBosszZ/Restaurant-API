@@ -10,6 +10,7 @@ import com.restaurant.restaurantapi.models.menu.EditMenu;
 import com.restaurant.restaurantapi.repositories.MenuRepository;
 
 import com.restaurant.restaurantapi.services.impl.MenuService;
+import com.restaurant.restaurantapi.services.impl.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +22,13 @@ import java.util.Optional;
 public class IMenuService implements MenuService {
     private final MenuRepository menuRepository;
     private final MenuMapper menuMapper;
-
+    private final StorageService storageService;
     @Override
     public MenuDTO create(CreateMenu createMenu) {
+        String generatedFileName = storageService.storeFile(createMenu.getImage());
         Menu menu = Menu.builder()
                 .name(createMenu.getName())
+                .image("http://localhost:8080/api/v1/FileUpload/files/" + generatedFileName)
                 .description(createMenu.getDescription())
                 .build();
         menu = menuRepository.save(menu);
@@ -34,20 +37,28 @@ public class IMenuService implements MenuService {
 
     @Override
     public MenuDTO update(EditMenu editMenu) {
-        Optional<Menu> menuOptional = menuRepository.findById(editMenu.getId());
-        if (menuOptional.isEmpty()) {
-            throw new AppException(ErrorCode.MENU_NOTFOUND);
+        Menu menu = menuRepository.findById(editMenu.getId())
+         .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
+        String imageUrl = menu.getImage();
+        if (editMenu.getImage() != null && !editMenu.getImage().isEmpty()) {
+            try {
+                String generatedFileName = storageService.storeFile(editMenu.getImage());
+                imageUrl = "http://localhost:8080/api/v1/FileUpload/files/" + generatedFileName;
+            } catch (Exception e) {
+                throw new AppException(ErrorCode.FILE_UPLOAD_FAILED);
+            }
         }
-        Menu menu = menuOptional.get();
         menu.setName(editMenu.getName());
+        menu.setImage(imageUrl);
         menu.setDescription(editMenu.getDescription());
         menu = menuRepository.save(menu);
         return menuMapper.toMenuDTO(menu);
     }
 
+
     @Override
-    public void delete(Long id) {
-        menuRepository.deleteById(id);
+    public void delete(Long[] ids) {
+        menuRepository.deleteAllById(List.of(ids));
     }
 
     @Override

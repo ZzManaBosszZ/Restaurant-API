@@ -59,26 +59,6 @@ public class IFoodService implements FoodService {
         return foodMapper.toFoodDTO(food);
     }
 
-//    @Override
-//    public FoodDTO update(EditFood editFood, User user) {
-//        Food food = foodRepository.findById(editFood.getId())
-//                .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
-//        String imageUrl = food.getImage();
-//        if (editFood.getImage() != null && !editFood.getImage().isEmpty()) {
-//            String generatedFileName = storageService.storeFile(editFood.getImage());
-//            imageUrl = "http://localhost:8080/api/v1/FileUpload/files/" + generatedFileName;
-//        }
-//        food.setName(editFood.getName());
-//        food.setImage(imageUrl);
-//        food.setPrice(editFood.getPrice());
-//        food.setDescription(editFood.getDescription());
-//        food.setQuantity(editFood.getQuantity());
-//        food.setModifiedBy(user.getUsername());
-//        food.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-//        food = foodRepository.save(food);
-//        return foodMapper.toFoodDTO(food);
-//    }
-
     public FoodDTO update(EditFood editFood, User user) {
         Food food = foodRepository.findById(editFood.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
