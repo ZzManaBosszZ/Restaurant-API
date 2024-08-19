@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,7 +15,7 @@ import java.sql.Timestamp;
 public class MenuFoodDTO {
     private Long id;
     private Long menuId;
-    private Long foodId;
+    private List<Long> foodId;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;
