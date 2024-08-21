@@ -57,6 +57,7 @@ public class Food extends BaseEntity {
     @OneToMany(mappedBy = "food", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Wishlist> wishlists ;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "foods", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MenuFood> menuFoods;
 
