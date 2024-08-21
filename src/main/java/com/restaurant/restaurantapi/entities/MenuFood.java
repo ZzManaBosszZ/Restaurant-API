@@ -19,6 +19,10 @@ public class MenuFood extends BaseEntity {
     private Menu menu;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "food_id")
+    @JoinTable(
+            name = "menufood",  // Tên của bảng trung gian
+            joinColumns = @JoinColumn(name = "menu_id"),  // Khóa ngoại của Menu
+            inverseJoinColumns = @JoinColumn(name = "food_id")  // Khóa ngoại của Food
+    )
     private List<Food> food;
 }

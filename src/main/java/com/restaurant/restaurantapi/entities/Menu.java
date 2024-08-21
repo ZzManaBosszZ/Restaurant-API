@@ -3,6 +3,7 @@ package com.restaurant.restaurantapi.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "menu")
-@Builder
+@SuperBuilder
 public class Menu extends BaseEntity {
     @Column(name = "name", length = 255)
     private String name;

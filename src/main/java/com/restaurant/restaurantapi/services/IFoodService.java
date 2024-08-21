@@ -12,7 +12,6 @@ import com.restaurant.restaurantapi.models.food.EditFood;
 import com.restaurant.restaurantapi.repositories.CategoryRepository;
 import com.restaurant.restaurantapi.repositories.FoodRepository;
 import com.restaurant.restaurantapi.repositories.UserRepository;
-import com.restaurant.restaurantapi.services.impl.CategoryService;
 import com.restaurant.restaurantapi.services.impl.FoodService;
 import com.restaurant.restaurantapi.services.impl.StorageService;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +46,10 @@ public class IFoodService implements FoodService {
                 .description(createFood.getDescription())
                 .quantity(createFood.getQuantity())
                 .star(0.0)
-                .createdBy(user.getUsername())
                 .category(category)
                 .user(user)
                 .reviews(new ArrayList<>())
+                .createdBy(user.getUsername())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedBy(user.getUsername())
                 .modifiedDate(new Timestamp(System.currentTimeMillis()))

@@ -2,6 +2,7 @@ package com.restaurant.restaurantapi.services;
 
 import com.restaurant.restaurantapi.dtos.menu.MenuDTO;
 import com.restaurant.restaurantapi.entities.Menu;
+import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import com.restaurant.restaurantapi.mappers.MenuMapper;
@@ -14,6 +15,7 @@ import com.restaurant.restaurantapi.services.impl.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,13 +25,18 @@ public class IMenuService implements MenuService {
     private final MenuRepository menuRepository;
     private final MenuMapper menuMapper;
     private final StorageService storageService;
+
     @Override
-    public MenuDTO create(CreateMenu createMenu) {
+    public MenuDTO create(CreateMenu createMenu,  User user) {
         String generatedFileName = storageService.storeFile(createMenu.getImage());
         Menu menu = Menu.builder()
                 .name(createMenu.getName())
                 .image("http://localhost:8080/api/v1/FileUpload/files/" + generatedFileName)
                 .description(createMenu.getDescription())
+                .createdBy(user.getUsername())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .modifiedBy(user.getUsername())
+                .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
         menu = menuRepository.save(menu);
         return menuMapper.toMenuDTO(menu);
@@ -58,7 +65,13 @@ public class IMenuService implements MenuService {
 
     @Override
     public void delete(Long[] ids) {
-        menuRepository.deleteAllById(List.of(ids));
+        for (Long id : ids) {
+            if (menuRepository.existsById(id)) {
+                menuRepository.deleteById(id);
+            } else {
+                throw new AppException(ErrorCode.FOOD_NOTFOUND);
+            }
+        }
     }
 
     @Override
