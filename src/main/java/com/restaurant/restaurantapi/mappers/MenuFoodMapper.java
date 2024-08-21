@@ -3,6 +3,9 @@ package com.restaurant.restaurantapi.mappers;
 import com.restaurant.restaurantapi.dtos.menufood.MenuFoodDTO;
 import com.restaurant.restaurantapi.entities.MenuFood;
 import org.springframework.stereotype.Component;
+import com.restaurant.restaurantapi.entities.Food;
+
+import java.util.stream.Collectors;
 
 @Component
 public class MenuFoodMapper {
@@ -13,8 +16,10 @@ public class MenuFoodMapper {
         }
         return MenuFoodDTO.builder()
                 .id(model.getId())
-                .menuId(model.getMenu() != null ? model.getMenu().getId() : null)
-                .foodId(model.getFood() != null ? model.getFood().getId() : null)
+                .menuId(model.getMenu().getId())
+                .foodId(model.getFood().stream()
+                        .map(Food::getId)
+                        .collect(Collectors.toList()))
                 .createdBy(model.getCreatedBy())
                 .createdDate(model.getCreatedDate())
                 .modifiedBy(model.getModifiedBy())

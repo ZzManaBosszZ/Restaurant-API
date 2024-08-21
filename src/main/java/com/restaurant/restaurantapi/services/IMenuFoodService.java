@@ -34,18 +34,22 @@ public class IMenuFoodService implements MenuFoodService {
 
     @Override
     public MenuFoodDTO create(CreateMenuFood createMenuFood, User user) {
-        Food food = foodRepository.findById(createMenuFood.getFoodId())
-                .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
         Menu menu = menuRepository.findById(createMenuFood.getMenuId())
                 .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
+        List<Food> foods = createMenuFood.getFoodId().stream()
+                .map(foodId -> foodRepository.findById(foodId)
+                        .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND)))
+                .collect(Collectors.toList());
+
         MenuFood menuFood = MenuFood.builder()
-                .food(food)
                 .menu(menu)
+                .food(foods)
                 .createdBy(user.getFullName())
                 .modifiedBy(user.getFullName())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
-                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
+
         menuFoodRepository.save(menuFood);
         return menuFoodMapper.toMenuFoodDTO(menuFood);
     }
@@ -56,15 +60,18 @@ public class IMenuFoodService implements MenuFoodService {
                 .orElseThrow(() -> new AppException(ErrorCode.MENU_FOOD_NOTFOUND));
         Menu menu = menuRepository.findById(editMenuFood.getMenuId())
                 .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
-        Food food = foodRepository.findById(editMenuFood.getFoodId())
-                .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
+        List<Food> foods = foodRepository.findAllById(editMenuFood.getFoodId());
+        if (foods.isEmpty()) {
+            throw new AppException(ErrorCode.FOOD_NOTFOUND);
+        }
         menuFoodExisting.setMenu(menu);
-        menuFoodExisting.setFood(food);
+        menuFoodExisting.setFood(foods);
         menuFoodExisting.setModifiedBy(user.getFullName());
         menuFoodExisting.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         menuFoodRepository.save(menuFoodExisting);
         return menuFoodMapper.toMenuFoodDTO(menuFoodExisting);
     }
+
 
 
     @Override

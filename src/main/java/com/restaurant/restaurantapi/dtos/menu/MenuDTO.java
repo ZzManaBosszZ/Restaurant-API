@@ -12,6 +12,7 @@ public class MenuDTO {
     private Long id;
     private String name;
     private String description;
+    private String image;
     private List<Long> menuFoodIds;
     private List<Long> orderTableIds;
     private Timestamp createdDate;

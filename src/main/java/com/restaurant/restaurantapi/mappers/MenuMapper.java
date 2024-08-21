@@ -14,9 +14,12 @@ public class MenuMapper {
         return MenuDTO.builder()
                 .id(menu.getId())
                 .name(menu.getName())
+                .image(menu.getImage())
                 .description(menu.getDescription())
-//                .menuFoodIds(menu.getMenuFoods().stream().map(mf -> mf.getId()).toList())
-//                .orderTableIds(menu.getOrderTables().stream().map(ot -> ot.getId()).toList())
+                .createdBy(menu.getCreatedBy())
+                .createdDate(menu.getCreatedDate())
+                .modifiedBy(menu.getModifiedBy())
+                .modifiedDate(menu.getModifiedDate())
                 .build();
     }
 

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class EditMenu {
@@ -15,4 +16,6 @@ public class EditMenu {
 
     @Size(max = 255)
     private String description;
+
+    private MultipartFile image;
 }

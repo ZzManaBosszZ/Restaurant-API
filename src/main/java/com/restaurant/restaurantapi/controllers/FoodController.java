@@ -93,17 +93,6 @@ public class FoodController {
         );
     }
 
-
-//    @PutMapping("/food")
-//    public ResponseEntity<ResponseObject> update(@Valid @RequestBody EditFood editFood) {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        User currentUser = (User) auth.getPrincipal();
-//        FoodDTO foodDTO = foodService.update(editFood, currentUser);
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                new ResponseObject(true, 200, "Update Success", foodDTO)
-//        );
-//    }
-
     @PutMapping("/food")
     public ResponseEntity<ResponseObject> update(
             @RequestParam("id") Long id,
