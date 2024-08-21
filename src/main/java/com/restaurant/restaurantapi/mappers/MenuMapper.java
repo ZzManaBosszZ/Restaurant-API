@@ -15,8 +15,8 @@ public class MenuMapper {
                 .id(menu.getId())
                 .name(menu.getName())
                 .description(menu.getDescription())
-                .menuFoodIds(menu.getMenuFoods().stream().map(mf -> mf.getId()).toList())
-                .orderTableIds(menu.getOrderTables().stream().map(ot -> ot.getId()).toList())
+//                .menuFoodIds(menu.getMenuFoods().stream().map(mf -> mf.getId()).toList())
+//                .orderTableIds(menu.getOrderTables().stream().map(ot -> ot.getId()).toList())
                 .build();
     }
 
