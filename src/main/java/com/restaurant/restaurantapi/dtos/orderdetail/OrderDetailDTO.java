@@ -4,7 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Timestamp;
+
 
 @Data
 @Builder
@@ -13,8 +14,10 @@ public class OrderDetailDTO {
     private Long orderId;
     private Long foodId;
     private Integer quantity;
-    private BigDecimal unitPrice;
+    private double unitPrice;
     private BigDecimal discount;
-    private Date createdDate;
-    private Date modifiedDate;
+    private Timestamp createdDate;
+    private Timestamp modifiedDate;
+    private String createdBy;
+    private String modifiedBy;
 }

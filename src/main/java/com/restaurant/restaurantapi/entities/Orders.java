@@ -41,5 +41,5 @@ public class Orders extends BaseEntity {
     private Payment payment;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderDetail> orderDetails = new ArrayList<>();
+    private List<OrderDetail> orderDetails;
 }

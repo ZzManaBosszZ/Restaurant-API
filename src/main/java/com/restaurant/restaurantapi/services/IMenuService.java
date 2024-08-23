@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class IMenuService implements MenuService {
@@ -43,7 +41,7 @@ public class IMenuService implements MenuService {
     }
 
     @Override
-    public MenuDTO update(EditMenu editMenu) {
+    public MenuDTO update(EditMenu editMenu, User user) throws AppException {
         Menu menu = menuRepository.findById(editMenu.getId())
          .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
         String imageUrl = menu.getImage();
@@ -58,6 +56,8 @@ public class IMenuService implements MenuService {
         menu.setName(editMenu.getName());
         menu.setImage(imageUrl);
         menu.setDescription(editMenu.getDescription());
+        menu.setModifiedBy(user.getUsername());
+        menu.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         menu = menuRepository.save(menu);
         return menuMapper.toMenuDTO(menu);
     }

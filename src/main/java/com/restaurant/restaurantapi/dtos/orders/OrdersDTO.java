@@ -1,6 +1,7 @@
 package com.restaurant.restaurantapi.dtos.orders;
 
 
+import com.restaurant.restaurantapi.dtos.orderdetail.OrderDetailDTO;
 import com.restaurant.restaurantapi.entities.OrderStatus;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class OrdersDTO {
     private BigDecimal total;
     private boolean isPaid;
     private OrderStatus status;
+    private List<OrderDetailDTO> orderDetails;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

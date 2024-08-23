@@ -47,12 +47,14 @@ public class MenuController {
                                                    @RequestParam("name") String name,
                                                    @RequestParam("description") String description,
                                                    @RequestParam(value = "image", required = false) MultipartFile image) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
         EditMenu editMenu = new EditMenu();
         editMenu.setId(id);
         editMenu.setName(name);
         editMenu.setDescription(description);
         editMenu.setImage(image);
-        MenuDTO menuDTO = menuService.update(editMenu);
+        MenuDTO menuDTO = menuService.update(editMenu, currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "Menu updated successfully", menuDTO)
         );
