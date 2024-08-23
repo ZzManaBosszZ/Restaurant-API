@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface MenuService {
     MenuDTO create(CreateMenu createMenu, User user);
-    MenuDTO update(EditMenu editMenu);
+    MenuDTO update(EditMenu editMenu, User user);
     void delete(Long[] id);
     MenuDTO findById(Long id);
     List<MenuDTO> findAll();

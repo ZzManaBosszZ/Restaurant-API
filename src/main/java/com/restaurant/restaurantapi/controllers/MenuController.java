@@ -60,11 +60,11 @@ public class MenuController {
         );
     }
 
-    @DeleteMapping
-    public ResponseEntity<ResponseObject> delete(@RequestBody Long[] ids) {
-        menuService.delete(ids);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseObject> delete(@PathVariable Long[] id) {
+        menuService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "Delete Success", "")
+                new ResponseObject(true, 200, "Menu deleted successfully", null)
         );
     }
 
