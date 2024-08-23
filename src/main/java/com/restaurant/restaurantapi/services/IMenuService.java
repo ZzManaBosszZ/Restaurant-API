@@ -2,6 +2,7 @@ package com.restaurant.restaurantapi.services;
 
 import com.restaurant.restaurantapi.dtos.menu.MenuDTO;
 import com.restaurant.restaurantapi.entities.Menu;
+import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import com.restaurant.restaurantapi.mappers.MenuMapper;
@@ -14,9 +15,8 @@ import com.restaurant.restaurantapi.services.impl.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class IMenuService implements MenuService {
@@ -24,19 +24,23 @@ public class IMenuService implements MenuService {
     private final MenuMapper menuMapper;
     private final StorageService storageService;
     @Override
-    public MenuDTO create(CreateMenu createMenu) {
+    public MenuDTO create(CreateMenu createMenu , User user) throws AppException {
         String generatedFileName = storageService.storeFile(createMenu.getImage());
         Menu menu = Menu.builder()
                 .name(createMenu.getName())
                 .image("http://localhost:8080/api/v1/FileUpload/files/" + generatedFileName)
                 .description(createMenu.getDescription())
+                .createdBy(user.getUsername())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .modifiedBy(user.getUsername())
+                .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
         menu = menuRepository.save(menu);
         return menuMapper.toMenuDTO(menu);
     }
 
     @Override
-    public MenuDTO update(EditMenu editMenu) {
+    public MenuDTO update(EditMenu editMenu, User user) throws AppException {
         Menu menu = menuRepository.findById(editMenu.getId())
          .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
         String imageUrl = menu.getImage();
@@ -51,6 +55,8 @@ public class IMenuService implements MenuService {
         menu.setName(editMenu.getName());
         menu.setImage(imageUrl);
         menu.setDescription(editMenu.getDescription());
+        menu.setModifiedBy(user.getUsername());
+        menu.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         menu = menuRepository.save(menu);
         return menuMapper.toMenuDTO(menu);
     }

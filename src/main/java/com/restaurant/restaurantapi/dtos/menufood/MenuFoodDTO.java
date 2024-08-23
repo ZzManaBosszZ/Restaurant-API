@@ -1,5 +1,7 @@
 package com.restaurant.restaurantapi.dtos.menufood;
 
+import com.restaurant.restaurantapi.dtos.food.FoodDTO;
+import com.restaurant.restaurantapi.dtos.menu.MenuDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,8 +16,8 @@ import java.util.List;
 @Builder
 public class MenuFoodDTO {
     private Long id;
-    private Long menuId;
-    private List<Long> foodId;
+    private List<FoodDTO> food;
+    private MenuDTO menu;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

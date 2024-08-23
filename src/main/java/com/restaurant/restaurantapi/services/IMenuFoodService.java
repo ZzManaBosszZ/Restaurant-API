@@ -1,5 +1,4 @@
 package com.restaurant.restaurantapi.services;
-import com.restaurant.restaurantapi.dtos.menu.MenuDTO;
 import com.restaurant.restaurantapi.dtos.menufood.MenuFoodDTO;
 import com.restaurant.restaurantapi.entities.Food;
 import com.restaurant.restaurantapi.entities.Menu;
@@ -40,16 +39,17 @@ public class IMenuFoodService implements MenuFoodService {
                 .map(foodId -> foodRepository.findById(foodId)
                         .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND)))
                 .collect(Collectors.toList());
-
+        if (foods.isEmpty()) {
+            throw new AppException(ErrorCode.FOOD_NOTFOUND);
+        }
         MenuFood menuFood = MenuFood.builder()
                 .menu(menu)
-                .food(foods)
+                .foods(foods)
                 .createdBy(user.getFullName())
                 .modifiedBy(user.getFullName())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
-
         menuFoodRepository.save(menuFood);
         return menuFoodMapper.toMenuFoodDTO(menuFood);
     }
@@ -65,7 +65,7 @@ public class IMenuFoodService implements MenuFoodService {
             throw new AppException(ErrorCode.FOOD_NOTFOUND);
         }
         menuFoodExisting.setMenu(menu);
-        menuFoodExisting.setFood(foods);
+        menuFoodExisting.setFoods(foods);
         menuFoodExisting.setModifiedBy(user.getFullName());
         menuFoodExisting.setModifiedDate(new Timestamp(System.currentTimeMillis()));
         menuFoodRepository.save(menuFoodExisting);

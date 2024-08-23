@@ -12,7 +12,6 @@ import com.restaurant.restaurantapi.models.food.EditFood;
 import com.restaurant.restaurantapi.repositories.CategoryRepository;
 import com.restaurant.restaurantapi.repositories.FoodRepository;
 import com.restaurant.restaurantapi.repositories.UserRepository;
-import com.restaurant.restaurantapi.services.impl.CategoryService;
 import com.restaurant.restaurantapi.services.impl.FoodService;
 import com.restaurant.restaurantapi.services.impl.StorageService;
 import lombok.RequiredArgsConstructor;
