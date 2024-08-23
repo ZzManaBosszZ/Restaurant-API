@@ -1,16 +1,15 @@
 package com.restaurant.restaurantapi.services;
-import com.restaurant.restaurantapi.entities.OrderStatus;
-import com.restaurant.restaurantapi.entities.User;
+import com.restaurant.restaurantapi.entities.*;
 import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
-import com.restaurant.restaurantapi.entities.Orders;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.mappers.OrdersMapper;
 import com.restaurant.restaurantapi.models.orders.CreateOrders;
+import com.restaurant.restaurantapi.repositories.FoodRepository;
 import com.restaurant.restaurantapi.repositories.OrdersRepository;
 import com.restaurant.restaurantapi.repositories.UserRepository;
 import com.restaurant.restaurantapi.services.impl.OrdersService;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,13 +19,15 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
     public class IOrdersService implements OrdersService {
-    @Autowired
-    private OrdersRepository ordersRepository;
-    @Autowired
-    private OrdersMapper ordersMapper;
-    @Autowired
-    private UserRepository userRepository;
+
+    private final OrdersRepository ordersRepository;
+    private final OrdersMapper ordersMapper;
+    private final UserRepository userRepository;
+    private final FoodRepository foodRepository;
+
+
 
     private String generateOrderCode() {
         return UUID.randomUUID().toString();
@@ -35,7 +36,6 @@ import java.util.stream.Collectors;
     @Override
     public OrdersDTO create(CreateOrders createOrders , User user) throws AppException {
         String orderCode = generateOrderCode();
-
         Orders order = Orders.builder()
                 .orderCode(orderCode)
                 .total(createOrders.getTotal())
@@ -47,6 +47,24 @@ import java.util.stream.Collectors;
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
+        List<OrderDetail> orderDetails = createOrders.getOrderDetails().stream()
+                .map(detail -> {
+                    Food food = foodRepository.findById(detail.getFoodId())
+                            .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
+                    return OrderDetail.builder()
+                            .order(order)
+                            .food(food)
+                            .quantity(detail.getQuantity())
+                            .unitPrice(food.getPrice())
+                            .discount(detail.getDiscount())
+                            .createdDate(new Timestamp(System.currentTimeMillis()))
+                            .modifiedDate(new Timestamp(System.currentTimeMillis()))
+                            .createdBy(user.getFullName())
+                            .modifiedBy(user.getFullName())
+                            .build();
+                })
+                .collect(Collectors.toList());
+        order.setOrderDetails(orderDetails);
         Orders savedOrder = ordersRepository.save(order);
         return ordersMapper.toOrdersDTO(savedOrder);
     }

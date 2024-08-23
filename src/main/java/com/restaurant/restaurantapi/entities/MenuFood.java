@@ -19,6 +19,10 @@ public class MenuFood extends BaseEntity {
     private Menu menu;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "food_id")
-    private List<Food> food;
+    @JoinTable(
+            name = "menufood_food",
+            joinColumns = @JoinColumn(name = "menufood_id"),
+            inverseJoinColumns = @JoinColumn(name = "food_id")
+    )
+    private List<Food> foods;
 }

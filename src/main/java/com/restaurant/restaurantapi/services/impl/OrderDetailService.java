@@ -8,5 +8,5 @@ import java.util.List;
 public interface OrderDetailService {
     List<OrderDetailDTO> findByOrderId(Long orderId);
     OrderDetailDTO findById(Long id);
-    OrderDetailDTO createOrderDetail(Long orderId, CreateOrderDetail createOrderDetail);
+//    OrderDetailDTO createOrderDetail(Long orderId, CreateOrderDetail createOrderDetail);
 }
