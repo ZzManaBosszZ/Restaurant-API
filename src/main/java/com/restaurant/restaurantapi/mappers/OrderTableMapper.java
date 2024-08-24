@@ -13,6 +13,7 @@ public class OrderTableMapper {
         return OrderTableDTO.builder()
                 .id(model.getId())
                 .name(model.getName())
+                .status(model.getStatus())
                 .numberOfPerson(model.getNumberOfPerson())
                 .email(model.getEmail())
                 .phone(model.getPhone())

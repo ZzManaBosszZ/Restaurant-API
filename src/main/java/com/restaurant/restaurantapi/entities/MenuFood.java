@@ -20,7 +20,7 @@ public class MenuFood extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "menufood",
+            name = "menu_food",
             joinColumns = @JoinColumn(name = "menu_id"),
             inverseJoinColumns = @JoinColumn(name = "food_id")
     )
