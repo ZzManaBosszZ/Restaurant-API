@@ -38,7 +38,6 @@ public class IOrderTableService implements OrderTableService {
                 .date(createOrderTable.getDate())
                 .menu(menu)
                 .build();
-
         return orderTableMapper.toOrderTableDTO(orderTableRepository.save(orderTable));
     }
 

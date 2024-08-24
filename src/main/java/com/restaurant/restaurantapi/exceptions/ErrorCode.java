@@ -17,6 +17,7 @@ public enum ErrorCode {
     ORDER_DETAIL_NOT_FOUND (404, "Order Detail Not Found", HttpStatus.NOT_FOUND),
     MENU_FOOD_NOTFOUND (404, "Menu Food Not Found", HttpStatus.NOT_FOUND),
     ALREADY_PAID( 400,"Payment already exists for this order", HttpStatus.NOT_FOUND) ,
+    INVALID_TOKEN(400, "Invalid Token", HttpStatus.BAD_REQUEST) ,
 
     FOOD_NOTFOUND(404, "Food Not Found", HttpStatus.NOT_FOUND),
     FOOD_EXISTED (400, "Food with this  already exists", HttpStatus.BAD_REQUEST),

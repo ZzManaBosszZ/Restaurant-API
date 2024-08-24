@@ -19,8 +19,8 @@ public class OrdersMapper {
         }
         return OrderDetailDTO.builder()
                 .id(orderDetail.getId())
-                .foodId(orderDetail.getFood().getId())
-                .orderId(orderDetail.getOrder().getId())
+//                .foodId(orderDetail.getFood().getId())
+//                .orderId(orderDetail.getOrder().getId())
                 .quantity(orderDetail.getQuantity())
                 .discount(orderDetail.getDiscount())
                 .unitPrice(orderDetail.getUnitPrice())

@@ -2,16 +2,23 @@ package com.restaurant.restaurantapi.services;
 
 import com.restaurant.restaurantapi.dtos.menuadmin.Menu;
 import com.restaurant.restaurantapi.dtos.menuadmin.MenuItem;
+import com.restaurant.restaurantapi.dtos.orders.*;
+import com.restaurant.restaurantapi.entities.OrderDetail;
+import com.restaurant.restaurantapi.entities.OrderStatus;
 import com.restaurant.restaurantapi.entities.Role;
 import com.restaurant.restaurantapi.entities.User;
+import com.restaurant.restaurantapi.repositories.OrderDetailRepository;
+import com.restaurant.restaurantapi.repositories.OrdersRepository;
 import com.restaurant.restaurantapi.services.impl.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.*;
+
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,6 +27,9 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AdminServiceImpl implements AdminService {
 
+    private final OrdersRepository ordersRepository;
+
+    private final OrderDetailRepository orderDetailRepository;
     @Override
     public List<Menu> getMenu(User currenUser) {
         List<Menu> menus = new ArrayList<>();
@@ -76,5 +86,114 @@ public class AdminServiceImpl implements AdminService {
         return authorities.stream()
                 .map(grantedAuthority -> Role.valueOf(grantedAuthority.getAuthority()))
                 .collect(Collectors.toSet());
+    }
+
+
+    @Override
+    public TotalOrderDTO getTotalOrders(User currentUser) {
+        Long totalOrders = ordersRepository.countOrders();
+        Long totalOrdersLast15Days = ordersRepository.countOrdersFromDate(getDate15DaysAgo());
+
+        double percentageGrowth = 0;
+        if (totalOrdersLast15Days > 0) {
+            percentageGrowth = ((double) (totalOrders - totalOrdersLast15Days) / totalOrdersLast15Days) * 100;
+        }
+
+        return TotalOrderDTO.builder()
+                .totalOrders(totalOrders)
+                .percentageGrowth(percentageGrowth)
+                .build();
+    }
+
+    @Override
+    public DeliveredOrderDTO getDeliveredOrders(User currentUser) {
+        Long deliveredOrders = ordersRepository.countByStatus(OrderStatus.completed);
+        Long deliveredOrdersLast15Days = ordersRepository.countDeliveredOrdersFromDate(OrderStatus.completed, getDate15DaysAgo());
+
+        double percentageGrowth = 0;
+        if (deliveredOrdersLast15Days > 0) {
+            percentageGrowth = ((double) (deliveredOrders - deliveredOrdersLast15Days) / deliveredOrdersLast15Days) * 100;
+        }
+
+        return DeliveredOrderDTO.builder()
+                .deliveredOrders(deliveredOrders)
+                .percentageGrowth(percentageGrowth)
+                .build();
+    }
+
+    @Override
+    public CancelledOrderDTO getCancelledOrders(User currentUser) {
+        Long cancelledOrders = ordersRepository.countByStatus(OrderStatus.cancelled);
+        Long cancelledOrdersLast15Days = ordersRepository.countCancelledOrdersFromDate(OrderStatus.cancelled, getDate15DaysAgo());
+
+        double percentageGrowth = 0;
+        if (cancelledOrdersLast15Days > 0) {
+            percentageGrowth = ((double) (cancelledOrders - cancelledOrdersLast15Days) / cancelledOrdersLast15Days) * 100;
+        }
+
+        return CancelledOrderDTO.builder()
+                .cancelledOrders(cancelledOrders)
+                .percentageGrowth(percentageGrowth)
+                .build();
+    }
+
+    @Override
+    public TotalRevenueDTO getTotalRevenue(User currentUser) {
+        Double totalRevenue = ordersRepository.sumTotalRevenue();
+        Double totalRevenueLast15Days = ordersRepository.sumTotalRevenueFromDate(getDate15DaysAgo());
+
+        double percentageGrowth = 0;
+        if (totalRevenueLast15Days > 0) {
+            percentageGrowth = ((totalRevenue - totalRevenueLast15Days) / totalRevenueLast15Days) * 100;
+        }
+
+        return TotalRevenueDTO.builder()
+                .totalRevenue(totalRevenue)
+                .percentageGrowth(percentageGrowth)
+                .build();
+    }
+    private Date getDate15DaysAgo() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -15);
+        return calendar.getTime();
+    }
+    @Override
+    public DailyRevenueDTO getDailyRevenue(User user) {
+        // Lấy doanh thu hôm nay
+        double totalRevenueToday = calculateTotalRevenueByDate(LocalDate.now());
+
+        // Lấy doanh thu tuần trước
+        LocalDate startOfLastWeek = LocalDate.now().minusWeeks(1).with(DayOfWeek.MONDAY);
+        LocalDate endOfLastWeek = startOfLastWeek.plusDays(6);
+        double totalRevenueLastWeek = calculateTotalRevenueByDateRange(startOfLastWeek, endOfLastWeek);
+
+        // Tính toán phần trăm tăng trưởng so với tuần trước
+        double percentageGrowthLastWeek = 0;
+        if (totalRevenueLastWeek > 0) {
+            percentageGrowthLastWeek = ((totalRevenueToday - totalRevenueLastWeek) / totalRevenueLastWeek) * 100;
+        }
+
+        return DailyRevenueDTO.builder()
+                .totalRevenueToday(totalRevenueToday)
+                .percentageGrowthLastWeek(percentageGrowthLastWeek)
+                .build();
+    }
+
+    private double calculateTotalRevenueByDate(LocalDate date) {
+        Date startDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date endDate = Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailsByDateRange(startDate, endDate);
+        return orderDetails.stream()
+                .mapToDouble(OrderDetail::getUnitPrice) // Lấy giá trị unitPrice kiểu double
+                .sum();
+    }
+
+    private double calculateTotalRevenueByDateRange(LocalDate startDate, LocalDate endDate) {
+        Date start = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date end = Date.from(endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailsByDateRange(start, end);
+        return orderDetails.stream()
+                .mapToDouble(OrderDetail::getUnitPrice) // Lấy giá trị unitPrice kiểu double
+                .sum();
     }
 }

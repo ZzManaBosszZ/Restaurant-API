@@ -58,4 +58,6 @@ public class Food extends BaseEntity {
     @ManyToMany(mappedBy = "foods", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MenuFood> menuFoods;
 
+
+
 }

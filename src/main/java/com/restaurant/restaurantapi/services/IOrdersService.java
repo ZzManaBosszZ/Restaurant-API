@@ -6,7 +6,6 @@ import com.restaurant.restaurantapi.mappers.OrdersMapper;
 import com.restaurant.restaurantapi.models.orders.CreateOrders;
 import com.restaurant.restaurantapi.repositories.FoodRepository;
 import com.restaurant.restaurantapi.repositories.OrdersRepository;
-import com.restaurant.restaurantapi.repositories.UserRepository;
 import com.restaurant.restaurantapi.services.impl.OrdersService;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 
     private final OrdersRepository ordersRepository;
     private final OrdersMapper ordersMapper;
-    private final UserRepository userRepository;
     private final FoodRepository foodRepository;
 
 

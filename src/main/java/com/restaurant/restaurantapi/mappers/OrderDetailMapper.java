@@ -9,18 +9,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderDetailMapper {
 
+    private final FoodMapper foodMapper;
+
+    public OrderDetailMapper(FoodMapper foodMapper) {
+        this.foodMapper = foodMapper;
+    }
+
     public OrderDetailDTO toOrderDetailDTO(OrderDetail model) {
         if (model == null) throw new AppException(ErrorCode.NOTFOUND);
 
         return OrderDetailDTO.builder()
                 .id(model.getId())
-                .orderId(model.getOrder() != null ? model.getOrder().getId() : null)
-                .foodId(model.getFood() != null ? model.getFood().getId() : null)
                 .quantity(model.getQuantity())
                 .unitPrice(model.getUnitPrice())
                 .discount(model.getDiscount())
                 .createdDate(model.getCreatedDate())
                 .modifiedDate(model.getModifiedDate())
+                .food(foodMapper.toFoodSummaryDTO(model.getFood()))
                 .build();
     }
 }
