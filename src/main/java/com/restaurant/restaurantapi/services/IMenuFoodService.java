@@ -74,11 +74,7 @@ public class IMenuFoodService implements MenuFoodService {
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
-
-        // Lưu MenuFood và các thực thể liên quan
         menuFoodRepository.save(menuFood);
-
-        // Trả về MenuFoodDTO sau khi lưu thành công
         return menuFoodMapper.toMenuFoodDTO(menuFood);
     }
 

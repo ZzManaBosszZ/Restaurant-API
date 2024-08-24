@@ -2,6 +2,7 @@ package com.restaurant.restaurantapi.services;
 
 import com.restaurant.restaurantapi.dtos.ordertable.OrderTableDTO;
 import com.restaurant.restaurantapi.entities.Menu;
+import com.restaurant.restaurantapi.entities.OrderStatus;
 import com.restaurant.restaurantapi.entities.OrderTable;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
@@ -34,6 +35,7 @@ public class IOrderTableService implements OrderTableService {
                 .numberOfPerson(createOrderTable.getNumberOfPerson())
                 .email(createOrderTable.getEmail())
                 .phone(createOrderTable.getPhone())
+                .status(OrderStatus.pending)
                 .time(createOrderTable.getTime())
                 .date(createOrderTable.getDate())
                 .menu(menu)
