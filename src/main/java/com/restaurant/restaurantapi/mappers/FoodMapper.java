@@ -1,4 +1,5 @@
 package com.restaurant.restaurantapi.mappers;
+import com.restaurant.restaurantapi.dtos.food.FoodSummaryDTO;
 import com.restaurant.restaurantapi.entities.Review;
 import com.restaurant.restaurantapi.dtos.food.FoodDTO;
 import com.restaurant.restaurantapi.entities.Food;
@@ -29,6 +30,14 @@ public class FoodMapper {
                 .modifiedDate(food.getModifiedDate())
                 .createdBy(food.getCreatedBy())
                 .modifiedBy(food.getModifiedBy())
+                .build();
+    }
+    public FoodSummaryDTO toFoodSummaryDTO(Food food) {
+        if (food == null) return null;
+        return FoodSummaryDTO.builder()
+                .name(food.getName())
+                .image(food.getImage())
+                .price(food.getPrice())
                 .build();
     }
 }

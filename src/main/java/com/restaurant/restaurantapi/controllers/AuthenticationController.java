@@ -1,6 +1,7 @@
 package com.restaurant.restaurantapi.controllers;
 
 
+import com.google.firebase.internal.FirebaseService;
 import com.restaurant.restaurantapi.dtos.ResponseObject;
 import com.restaurant.restaurantapi.dtos.UpdateProfileUserRequest;
 import com.restaurant.restaurantapi.dtos.auth.JwtAuthenticationResponse;
@@ -12,6 +13,7 @@ import com.restaurant.restaurantapi.models.auth.*;
 import com.restaurant.restaurantapi.services.impl.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,6 +25,19 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+
+
+    @PostMapping("/auth/user/google-signin")
+    public ResponseEntity<JwtAuthenticationResponse> googleSignin(@RequestParam String idToken) {
+        JwtAuthenticationResponse response = authenticationService.googleSignin(idToken);
+        return ResponseEntity.ok(response);
+    }
+
+//    @PostMapping("/auth/user/facebook-signin")
+//    public ResponseEntity<JwtAuthenticationResponse> facebookSignin(@RequestParam String idToken) {
+//        JwtAuthenticationResponse response = authenticationService.facebookSignin(idToken);
+//        return ResponseEntity.ok(response);
+//    }
 
     @PostMapping("/auth/user/signup")
     public ResponseEntity<ResponseObject> signup(@RequestBody @Valid SignUpRequest signUpRequest) {

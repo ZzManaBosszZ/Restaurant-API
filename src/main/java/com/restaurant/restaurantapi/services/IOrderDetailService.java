@@ -29,25 +29,6 @@ public class IOrderDetailService implements OrderDetailService {
     private final FoodRepository foodRepository;
     private final OrdersRepository ordersRepository;
 
-
-//    @Transactional
-//    @Override
-//    public OrderDetailDTO createOrderDetail(Long orderId, CreateOrderDetail createOrderDetail) {
-//        Orders order = ordersRepository.findById(orderId)
-//                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-//        Food food = foodRepository.findById(createOrderDetail.getFoodId())
-//                .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
-//        OrderDetail orderDetail = OrderDetail.builder()
-//                .order(order)
-//                .food(food)
-//                .quantity(createOrderDetail.getQuantity())
-//                .unitPrice(createOrderDetail.getUnitPrice())
-//                .discount(createOrderDetail.getDiscount())
-//                .build();
-//        orderDetailRepository.save(orderDetail);
-//
-//        return orderDetailMapper.toOrderDetailDTO(orderDetail);
-//    }
     @Override
     public List<OrderDetailDTO> findByOrderId(Long orderId) {
         Orders order = ordersRepository.findById(orderId)

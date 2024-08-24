@@ -23,7 +23,6 @@ public class Menu extends BaseEntity {
     private String description;
 
 
-
     @Column(name = "image", nullable = false)
     @Pattern(regexp = "^(http|https)://.*$", message = "Image URL should be a valid URL")
     private String image;

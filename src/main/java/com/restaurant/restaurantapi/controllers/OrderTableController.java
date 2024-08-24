@@ -32,13 +32,6 @@ public class OrderTableController {
         return ResponseEntity.ok(orderTableDTOs);
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<OrderTableDTO> updateOrderTable(
-//            @PathVariable Long id, @RequestBody CreateOrderTable updateOrderTable) {
-//        OrderTableDTO orderTableDTO = orderTableService.updateOrderTable(id, updateOrderTable);
-//        return ResponseEntity.ok(orderTableDTO);
-//    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrderTable(@PathVariable Long id) {
         orderTableService.deleteOrderTable(id);

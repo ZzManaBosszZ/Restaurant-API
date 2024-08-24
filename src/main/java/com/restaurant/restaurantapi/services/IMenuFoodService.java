@@ -31,6 +31,30 @@ public class IMenuFoodService implements MenuFoodService {
     private final MenuRepository menuRepository;
 
 
+//    @Override
+//    public MenuFoodDTO create(CreateMenuFood createMenuFood, User user) {
+//        Menu menu = menuRepository.findById(createMenuFood.getMenuId())
+//                .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
+//        List<Food> foods = createMenuFood.getFoodId().stream()
+//                .map(foodId -> foodRepository.findById(foodId)
+//                        .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND)))
+//                .collect(Collectors.toList());
+//        if (foods.isEmpty()) {
+//            throw new AppException(ErrorCode.FOOD_NOTFOUND);
+//        }
+//        MenuFood menuFood = MenuFood.builder()
+//                .menu(menu)
+//                .foods(foods)
+//                .createdBy(user.getFullName())
+//                .modifiedBy(user.getFullName())
+//                .createdDate(new Timestamp(System.currentTimeMillis()))
+//                .modifiedDate(new Timestamp(System.currentTimeMillis()))
+//                .build();
+//        menuFoodRepository.save(menuFood);
+//        return menuFoodMapper.toMenuFoodDTO(menuFood);
+//    }
+
+
     @Override
     public MenuFoodDTO create(CreateMenuFood createMenuFood, User user) {
         Menu menu = menuRepository.findById(createMenuFood.getMenuId())
@@ -50,9 +74,14 @@ public class IMenuFoodService implements MenuFoodService {
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
+
+        // Lưu MenuFood và các thực thể liên quan
         menuFoodRepository.save(menuFood);
+
+        // Trả về MenuFoodDTO sau khi lưu thành công
         return menuFoodMapper.toMenuFoodDTO(menuFood);
     }
+
 
     @Override
     public MenuFoodDTO update(EditMenuFood editMenuFood, User user) {

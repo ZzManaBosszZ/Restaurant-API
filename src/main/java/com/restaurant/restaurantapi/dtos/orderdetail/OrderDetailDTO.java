@@ -1,5 +1,6 @@
 package com.restaurant.restaurantapi.dtos.orderdetail;
 
+import com.restaurant.restaurantapi.dtos.food.FoodSummaryDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,8 +12,6 @@ import java.sql.Timestamp;
 @Builder
 public class OrderDetailDTO {
     private Long id;
-    private Long orderId;
-    private Long foodId;
     private Integer quantity;
     private double unitPrice;
     private BigDecimal discount;
@@ -20,4 +19,5 @@ public class OrderDetailDTO {
     private Timestamp modifiedDate;
     private String createdBy;
     private String modifiedBy;
+    private FoodSummaryDTO food;
 }
