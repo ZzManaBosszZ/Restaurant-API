@@ -107,8 +107,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public DeliveredOrderDTO getDeliveredOrders(User currentUser) {
-        Long deliveredOrders = ordersRepository.countByStatus(OrderStatus.completed);
-        Long deliveredOrdersLast15Days = ordersRepository.countDeliveredOrdersFromDate(OrderStatus.completed, getDate15DaysAgo());
+        Long deliveredOrders = ordersRepository.countByStatus(OrderStatus.Paid);
+        Long deliveredOrdersLast15Days = ordersRepository.countDeliveredOrdersFromDate(OrderStatus.Paid, getDate15DaysAgo());
 
         double percentageGrowth = 0;
         if (deliveredOrdersLast15Days > 0) {
@@ -123,8 +123,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public CancelledOrderDTO getCancelledOrders(User currentUser) {
-        Long cancelledOrders = ordersRepository.countByStatus(OrderStatus.cancelled);
-        Long cancelledOrdersLast15Days = ordersRepository.countCancelledOrdersFromDate(OrderStatus.cancelled, getDate15DaysAgo());
+        Long cancelledOrders = ordersRepository.countByStatus(OrderStatus.Cancelled);
+        Long cancelledOrdersLast15Days = ordersRepository.countCancelledOrdersFromDate(OrderStatus.Cancelled, getDate15DaysAgo());
 
         double percentageGrowth = 0;
         if (cancelledOrdersLast15Days > 0) {

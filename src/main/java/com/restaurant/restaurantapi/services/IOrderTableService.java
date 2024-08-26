@@ -35,7 +35,7 @@ public class IOrderTableService implements OrderTableService {
                 .numberOfPerson(createOrderTable.getNumberOfPerson())
                 .email(createOrderTable.getEmail())
                 .phone(createOrderTable.getPhone())
-                .status(OrderStatus.pending)
+                .status(OrderStatus.Pending)
                 .time(createOrderTable.getTime())
                 .date(createOrderTable.getDate())
                 .menu(menu)
