@@ -1,5 +1,7 @@
 package com.restaurant.restaurantapi.services;
 
+import com.google.firebase.auth.FirebaseToken;
+import com.google.gson.JsonObject;
 import com.restaurant.restaurantapi.dtos.UpdateProfileUserRequest;
 import com.restaurant.restaurantapi.dtos.auth.JwtAuthenticationResponse;
 import com.restaurant.restaurantapi.dtos.UserDTO;
@@ -12,6 +14,7 @@ import com.restaurant.restaurantapi.models.mail.MailStructure;
 import com.restaurant.restaurantapi.repositories.UserRepository;
 
 import com.restaurant.restaurantapi.services.impl.AuthenticationService;
+import com.restaurant.restaurantapi.services.impl.FirebaseService;
 import com.restaurant.restaurantapi.services.impl.JWTService;
 import com.restaurant.restaurantapi.services.impl.MailService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,7 @@ public class IAuthenticationService implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     private final MailService mailService;
+    private final FirebaseService firebaseService;
     private static final String ALLOWED_CHARACTERS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     public static String generateRandomString(int length) {
@@ -42,6 +46,52 @@ public class IAuthenticationService implements AuthenticationService {
             sb.append(ALLOWED_CHARACTERS.charAt(randomIndex));
         }
         return sb.toString();
+    }
+
+
+    public JwtAuthenticationResponse googleSignin(String idToken) {
+        try {
+            FirebaseToken decodedToken = firebaseService.verifyGoogleToken(idToken);
+            String email = decodedToken.getEmail();
+            User user = userRepository.findByEmail(email).orElseGet(() -> {
+                User newUser = new User();
+                newUser.setEmail(email);
+                newUser.setRole(Role.USER);
+                newUser.setUserType("user");
+                return userRepository.save(newUser);
+            });
+            return generateJwtToken(user);
+        } catch (Exception e) {
+            throw new AppException(ErrorCode.INVALID_TOKEN);
+        }
+    }
+
+//    @Override
+//    public JwtAuthenticationResponse facebookSignin(String idToken) {
+//        JsonObject facebookUser = firebaseService.verifyFacebookToken(idToken);
+//        String facebookId = facebookUser.get("id").getAsString();
+//        String email = facebookUser.has("email") ? facebookUser.get("email").getAsString() : null;
+//        String name = facebookUser.get("name").getAsString();
+//
+//        User user = userRepository.findByEmail(email).orElseGet(() -> {
+//            User newUser = new User();
+//            newUser.setFullName(name);
+//            newUser.setEmail(email);
+//            newUser.setRole(Role.USER);
+//            newUser.setUserType("user");
+//            newUser.setPassword(passwordEncoder.encode(facebookId)); // Use Facebook ID as password
+//            return userRepository.save(newUser);
+//        });
+//
+//        return generateJwtToken(user);
+//    }
+    private JwtAuthenticationResponse generateJwtToken(User user) {
+        String token = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(new HashMap<>(), user);
+        JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+        jwtAuthenticationResponse.setToken(token);
+        jwtAuthenticationResponse.setRefreshToken(refreshToken);
+        return jwtAuthenticationResponse;
     }
 
     @Override

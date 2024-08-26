@@ -17,4 +17,6 @@ public interface AuthenticationService  {
     void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
     void resetPassword(ResetPasswordRequest resetPasswordRequest, String token);
     void updateProfileUser(UpdateProfileUserRequest updateProfileUserRequest, User currentUser);
+    JwtAuthenticationResponse googleSignin(String idToken);
+//    JwtAuthenticationResponse facebookSignin(String idToken);
 }

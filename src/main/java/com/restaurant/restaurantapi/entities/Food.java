@@ -60,5 +60,4 @@ public class Food extends BaseEntity {
     @JsonIgnore
     @ManyToMany(mappedBy = "foods", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<MenuFood> menuFoods;
-
 }

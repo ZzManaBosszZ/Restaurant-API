@@ -1,43 +1,45 @@
 package com.restaurant.restaurantapi.controllers;
+import com.restaurant.restaurantapi.dtos.ResponseObject;
 import com.restaurant.restaurantapi.dtos.ordertable.OrderTableDTO;
 import com.restaurant.restaurantapi.models.ordertable.CreateOrderTable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.restaurant.restaurantapi.services.impl.OrderTableService;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/ordertables")
+@RequestMapping("/api/v1/any/ordertables")
 @RequiredArgsConstructor
 public class OrderTableController {
 
     private final OrderTableService orderTableService;
 
     @PostMapping
-    public ResponseEntity<OrderTableDTO> createOrderTable(@RequestBody CreateOrderTable createOrderTable) {
+    public ResponseEntity<ResponseObject> createOrderTable(@RequestBody CreateOrderTable createOrderTable) {
         OrderTableDTO orderTableDTO = orderTableService.createOrderTable(createOrderTable);
-        return ResponseEntity.ok(orderTableDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", orderTableDTO)
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderTableDTO> getOrderTableById(@PathVariable Long id) {
+    public ResponseEntity<ResponseObject> getOrderTableById(@PathVariable Long id) {
         OrderTableDTO orderTableDTO = orderTableService.getOrderTableById(id);
-        return ResponseEntity.ok(orderTableDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", orderTableDTO)
+        );
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderTableDTO>> getAllOrderTables() {
+    public ResponseEntity<ResponseObject> getAllOrderTables() {
         List<OrderTableDTO> orderTableDTOs = orderTableService.getAllOrderTables();
-        return ResponseEntity.ok(orderTableDTOs);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", orderTableDTOs)
+        );
     }
-
-//    @PutMapping("/{id}")
-//    public ResponseEntity<OrderTableDTO> updateOrderTable(
-//            @PathVariable Long id, @RequestBody CreateOrderTable updateOrderTable) {
-//        OrderTableDTO orderTableDTO = orderTableService.updateOrderTable(id, updateOrderTable);
-//        return ResponseEntity.ok(orderTableDTO);
-//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrderTable(@PathVariable Long id) {

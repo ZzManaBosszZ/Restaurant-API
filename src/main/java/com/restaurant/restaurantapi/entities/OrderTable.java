@@ -33,6 +33,10 @@ public class OrderTable extends BaseEntity {
     @Column(name = "date")
     private Date date;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")
     private Menu menu;
