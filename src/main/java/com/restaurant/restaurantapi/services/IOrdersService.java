@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
                 .orderCode(orderCode)
                 .total(createOrders.getTotal())
                 .isPaid(false)
-                .status(OrderStatus.pending)
+                .status(OrderStatus.Pending)
                 .user(user)
                 .createdBy(user.getFullName())
                 .modifiedBy(user.getFullName())

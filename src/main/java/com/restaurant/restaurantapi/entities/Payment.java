@@ -16,16 +16,16 @@ import java.time.LocalDateTime;
 @Builder
 public class Payment extends BaseEntity {
 
-    @Column(name = "paymentMethod", nullable = false)
+    @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
 
-    @Column(name = "isPaid", nullable = false)
+    @Column(name = "is_paid", nullable = false)
     private boolean isPaid;
 
     @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(name = "paymentDate", nullable = false)
+    @Column(name = "payment_date", nullable = false)
     private LocalDateTime paymentDate;
 
     @OneToOne
