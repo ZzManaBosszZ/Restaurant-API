@@ -22,6 +22,8 @@ public class CartItemMapper {
                 .foodImage(cartItem.getFood().getImage())
                 .foodPrice(cartItem.getFood().getPrice())
                 .quantity(cartItem.getQuantity())
+                .createdBy(cartItem.getCreatedBy())
+                .modifiedBy(cartItem.getModifiedBy())
                 .build();
     }
 

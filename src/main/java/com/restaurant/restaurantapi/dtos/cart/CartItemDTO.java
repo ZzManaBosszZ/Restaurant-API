@@ -12,4 +12,6 @@ public class CartItemDTO {
     private String foodImage;
     private double foodPrice;
     private int quantity;
+    private String createdBy;
+    private String modifiedBy;
 }
