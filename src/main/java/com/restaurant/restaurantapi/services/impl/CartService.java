@@ -1,5 +1,6 @@
 package com.restaurant.restaurantapi.services.impl;
 import com.restaurant.restaurantapi.dtos.cart.CartDTO;
+import com.restaurant.restaurantapi.entities.Cart;
 import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.models.cart.AddToCartModel;
 import com.restaurant.restaurantapi.models.cart.UpdateCartItemModel;
@@ -11,5 +12,6 @@ public interface CartService {
     CartDTO updateCartItem(UpdateCartItemModel updateCartItemModel, User user, HttpSession session);
     CartDTO removeCartItem(Long cartItemId, User user, HttpSession session);
     void clearCart(User user, HttpSession session);
+    Cart getCartEntityByUser(User user, HttpSession session);
 }
 

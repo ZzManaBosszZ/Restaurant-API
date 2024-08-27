@@ -27,6 +27,8 @@ public class CartMapper {
         return CartDTO.builder()
                 .id(cart.getId())
                 .items(cartItemDTOs)
+                .createdBy(cart.getCreatedBy())
+                .modifiedBy(cart.getModifiedBy())
                 .build();
     }
 
