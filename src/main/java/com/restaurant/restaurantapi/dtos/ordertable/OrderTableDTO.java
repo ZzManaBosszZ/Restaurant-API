@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -18,4 +19,5 @@ public class OrderTableDTO {
     private Time time;
     private Date date;
     private Long menuId;
+    private String menuName;
 }

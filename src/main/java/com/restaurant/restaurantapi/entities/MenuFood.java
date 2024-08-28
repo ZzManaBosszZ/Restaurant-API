@@ -25,4 +25,5 @@ public class MenuFood extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "food_id")
     )
     private List<Food> foods;
+
 }
