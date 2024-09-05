@@ -1,5 +1,6 @@
 package com.restaurant.restaurantapi.dtos.orderdetail;
 
+import com.restaurant.restaurantapi.dtos.UserDTO;
 import com.restaurant.restaurantapi.dtos.food.FoodSummaryDTO;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +21,5 @@ public class OrderDetailDTO {
     private String createdBy;
     private String modifiedBy;
     private FoodSummaryDTO food;
+    private UserDTO user;
 }

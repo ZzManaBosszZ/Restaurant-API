@@ -30,4 +30,8 @@ public class OrderDetail extends BaseEntity {
 
     @Column(name = "discount")
     private BigDecimal discount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

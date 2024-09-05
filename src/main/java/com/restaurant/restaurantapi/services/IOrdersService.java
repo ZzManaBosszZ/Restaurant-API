@@ -52,6 +52,7 @@ import java.util.stream.Collectors;
                     return OrderDetail.builder()
                             .order(order)
                             .food(food)
+                            .user(user)
                             .quantity(detail.getQuantity())
                             .unitPrice(food.getPrice())
                             .discount(detail.getDiscount())

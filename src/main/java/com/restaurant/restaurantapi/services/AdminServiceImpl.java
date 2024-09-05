@@ -184,7 +184,7 @@ public class AdminServiceImpl implements AdminService {
         Date endDate = Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
         List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailsByDateRange(startDate, endDate);
         return orderDetails.stream()
-                .mapToDouble(OrderDetail::getUnitPrice) // Lấy giá trị unitPrice kiểu double
+                .mapToDouble(OrderDetail::getUnitPrice)
                 .sum();
     }
 

@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 public class OrderDetailMapper {
 
     private final FoodMapper foodMapper;
+    private final UserMapper userMapper;
 
-    public OrderDetailMapper(FoodMapper foodMapper) {
+    public OrderDetailMapper(FoodMapper foodMapper, UserMapper userMapper) {
         this.foodMapper = foodMapper;
+        this.userMapper = userMapper;
     }
 
     public OrderDetailDTO toOrderDetailDTO(OrderDetail model) {
@@ -25,7 +27,10 @@ public class OrderDetailMapper {
                 .discount(model.getDiscount())
                 .createdDate(model.getCreatedDate())
                 .modifiedDate(model.getModifiedDate())
+                .createdBy(model.getCreatedBy())
+                .modifiedBy(model.getModifiedBy())
                 .food(foodMapper.toFoodSummaryDTO(model.getFood()))
+                .user(userMapper.toUserSummaryDTO(model.getUser()))
                 .build();
     }
 }
