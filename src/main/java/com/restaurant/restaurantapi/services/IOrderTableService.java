@@ -7,10 +7,12 @@ import com.restaurant.restaurantapi.entities.OrderTable;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import com.restaurant.restaurantapi.mappers.OrderTableMapper;
+import com.restaurant.restaurantapi.models.mail.MailStructure;
 import com.restaurant.restaurantapi.models.ordertable.CreateOrderTable;
 import com.restaurant.restaurantapi.repositories.MenuRepository;
 import com.restaurant.restaurantapi.repositories.OrderTableRepository;
 
+import com.restaurant.restaurantapi.services.impl.MailService;
 import com.restaurant.restaurantapi.services.impl.OrderTableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class IOrderTableService implements OrderTableService {
     private final OrderTableRepository orderTableRepository;
     private final MenuRepository menuRepository;
     private final OrderTableMapper orderTableMapper;
-
+    private final MailService mailService;
     @Override
     public OrderTableDTO createOrderTable(CreateOrderTable createOrderTable) {
         Menu menu = menuRepository.findById(createOrderTable.getMenuId())
@@ -40,7 +42,13 @@ public class IOrderTableService implements OrderTableService {
                 .date(createOrderTable.getDate())
                 .menu(menu)
                 .build();
-        return orderTableMapper.toOrderTableDTO(orderTableRepository.save(orderTable));
+        OrderTableDTO orderTableDTO = orderTableMapper.toOrderTableDTO(orderTableRepository.save(orderTable));
+        MailStructure mailStructure = new MailStructure();
+        mailStructure.setSubject("Order Table Created");
+        mailStructure.setMessage("Your order has been created successfully. Order details: \nName: " + orderTable.getName() +
+                "\nDate: " + orderTable.getDate() + "\nTime: " + orderTable.getTime());
+        mailService.sendMail(orderTable.getEmail(), mailStructure);
+        return orderTableDTO;
     }
 
     @Override
@@ -55,24 +63,19 @@ public class IOrderTableService implements OrderTableService {
         return orderTableRepository.findAll().stream().map(orderTableMapper::toOrderTableDTO).collect(Collectors.toList());
     }
 
-//    @Override
-//    public OrderTableDTO updateOrderTable(Long id, CreateOrderTable updateOrderTable) {
-//        OrderTable orderTable = orderTableRepository.findById(id)
-//                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
-//
-//        Menu menu = menuRepository.findById(updateOrderTable.getMenuId())
-//                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
-//
-//        orderTable.setName(updateOrderTable.getName());
-//        orderTable.setNumberOfPerson(updateOrderTable.getNumberOfPerson());
-//        orderTable.setEmail(updateOrderTable.getEmail());
-//        orderTable.setPhone(updateOrderTable.getPhone());
-//        orderTable.setTime(updateOrderTable.getTime());
-//        orderTable.setDate(updateOrderTable.getDate());
-//        orderTable.setMenu(menu);
-//
-//        return orderTableMapper.toOrderTableDTO(orderTableRepository.save(orderTable));
-//    }
+    @Override
+    public OrderTableDTO acceptOrderTable(Long id) {
+        OrderTable orderTable = orderTableRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+        orderTable.setStatus(OrderStatus.Accepted);
+        OrderTableDTO acceptedOrderTableDTO = orderTableMapper.toOrderTableDTO(orderTableRepository.save(orderTable));
+        MailStructure mailStructure = new MailStructure();
+        mailStructure.setSubject("Order Table Accepted");
+        mailStructure.setMessage("Your order has been accepted. Thank you for choosing our restaurant. \nOrder details: \nName: "
+                + orderTable.getName() + "\nDate: " + orderTable.getDate() + "\nTime: " + orderTable.getTime());
+        mailService.sendMail(orderTable.getEmail(), mailStructure);
+        return acceptedOrderTableDTO;
+    }
 
     @Override
     public void deleteOrderTable(Long id) {

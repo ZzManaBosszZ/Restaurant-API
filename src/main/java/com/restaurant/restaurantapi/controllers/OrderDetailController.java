@@ -2,9 +2,12 @@ package com.restaurant.restaurantapi.controllers;
 
 import com.restaurant.restaurantapi.dtos.orderdetail.OrderDetailDTO;
 
+import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.services.impl.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,7 +21,9 @@ public class OrderDetailController {
 
     @GetMapping("/{orderId}")
     public ResponseEntity<List<OrderDetailDTO>> getOrderDetailsByOrderId(@PathVariable Long orderId) {
-        List<OrderDetailDTO> orderDetails = orderDetailService.findByOrderId(orderId);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        List<OrderDetailDTO> orderDetails = orderDetailService.findByOrderId(orderId,currentUser);
         return ResponseEntity.ok(orderDetails);
     }
 

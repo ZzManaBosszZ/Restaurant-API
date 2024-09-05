@@ -74,7 +74,10 @@ public class User extends BaseEntity implements UserDetails {
     @ToString.Exclude
     private List<Review> reviews;
 
-
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @ToString.Exclude
+    private List<OrderDetail> ordersdetail;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -83,7 +86,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return fullName;
     }
 
     @Override

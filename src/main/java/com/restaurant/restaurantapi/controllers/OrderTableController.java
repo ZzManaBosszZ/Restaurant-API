@@ -25,6 +25,14 @@ public class OrderTableController {
         );
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseObject> acceptOrderTable(@PathVariable Long id) {
+        OrderTableDTO acceptedOrderTableDTO = orderTableService.acceptOrderTable(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "Order table accepted successfully", acceptedOrderTableDTO)
+        );
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getOrderTableById(@PathVariable Long id) {
         OrderTableDTO orderTableDTO = orderTableService.getOrderTableById(id);

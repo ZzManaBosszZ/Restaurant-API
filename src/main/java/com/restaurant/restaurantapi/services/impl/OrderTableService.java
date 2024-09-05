@@ -15,4 +15,6 @@ public interface OrderTableService {
 //    OrderTableDTO updateOrderTable(Long id, CreateOrderTable updateOrderTable);
 
     void deleteOrderTable(Long id);
+
+    OrderTableDTO acceptOrderTable(Long id);
 }
