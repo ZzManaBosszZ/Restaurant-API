@@ -44,7 +44,7 @@ public class IOrdersService implements OrdersService {
                 .orderCode(orderCode)
                 .total(BigDecimal.ZERO)
                 .isPaid(false)
-                .status(OrderStatus.Pending)
+                .status(OrderStatus.pending)
                 .user(user)
                 .createdBy(user.getFullName())
                 .modifiedBy(user.getFullName())

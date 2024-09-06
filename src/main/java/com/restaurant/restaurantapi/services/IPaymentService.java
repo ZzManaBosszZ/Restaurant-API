@@ -26,7 +26,7 @@ public class IPaymentService implements PaymentService {
     public PaymentDTO payment(CreatePayment createPayment, User currentUser) {
         Orders order = ordersRepository.findById(createPayment.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
-        if (order.getStatus().equals(OrderStatus.Pending) || order.getStatus().equals(OrderStatus.Cancelled)) {
+        if (order.getStatus().equals(OrderStatus.pending) || order.getStatus().equals(OrderStatus.cancelled)) {
             throw new AppException(ErrorCode.ALREADY_PAID);
         }
         Payment paymentExisting = paymentRepository.findByOrderAndUser(order, currentUser);
@@ -41,7 +41,7 @@ public class IPaymentService implements PaymentService {
         paymentRepository.save(payment);
         Orders order1 = Orders.builder()
                 .isPaid(true)
-                .status(OrderStatus.Pending)
+                .status(OrderStatus.pending)
                 .build();
         ordersRepository.save(order1);
         return paymentMapper.toPaymentDTO(payment);
