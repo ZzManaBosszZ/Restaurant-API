@@ -67,7 +67,7 @@ public class IOrderTableService implements OrderTableService {
     public OrderTableDTO acceptOrderTable(Long id) {
         OrderTable orderTable = orderTableRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
-        orderTable.setStatus(OrderStatus.Accepted);
+        orderTable.setStatus(OrderStatus.accepted);
         OrderTableDTO acceptedOrderTableDTO = orderTableMapper.toOrderTableDTO(orderTableRepository.save(orderTable));
         MailStructure mailStructure = new MailStructure();
         mailStructure.setSubject("Order Table Accepted");

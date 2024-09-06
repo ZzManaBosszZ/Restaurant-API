@@ -1,9 +1,10 @@
 package com.restaurant.restaurantapi.entities;
 
 public enum OrderStatus {
-    Accepted,
-    Pending,
-    Process,
-    Paid,
-    Cancelled
+    pending,
+    accepted,
+    confirmed,
+    process,
+    completed,
+    cancelled
 }

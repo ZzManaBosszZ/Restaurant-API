@@ -10,11 +10,14 @@ public class UserMapper {
     public UserDTO toUserSummaryDTO(User user) {
         if (user == null) return null;
         return UserDTO.builder()
+                .id(user.getId())
+                .code(user.getCode())
                 .fullName(user.getUsername())
                 .email(user.getEmail())
                 .address(user.getAddress())
                 .phone(user.getPhone())
                 .birthday(user.getBirthDay())
+                .status(user.getStatus())
                 .build();
     }
 }

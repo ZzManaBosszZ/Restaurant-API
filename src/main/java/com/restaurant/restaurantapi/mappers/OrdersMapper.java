@@ -8,31 +8,26 @@ import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import org.springframework.stereotype.Component;
 
-import java.util.stream.Collectors;
-
 @Component
 public class OrdersMapper {
 
-    private OrderDetailDTO toOrderDetailDTO(OrderDetail orderDetail) {
-        if (orderDetail == null) {
-            throw new AppException(ErrorCode.NOTFOUND);
-        }
-        return OrderDetailDTO.builder()
-                .id(orderDetail.getId())
-//                .foodId(orderDetail.getFood().getId())
-//                .orderId(orderDetail.getOrder().getId())
-                .quantity(orderDetail.getQuantity())
-                .discount(orderDetail.getDiscount())
-                .unitPrice(orderDetail.getUnitPrice())
-                .createdDate(orderDetail.getCreatedDate())
-                .modifiedDate(orderDetail.getModifiedDate())
-                .build();
+    private final OrderDetailMapper orderDetailMapper;
+
+    // Constructor injection for OrderDetailMapper
+    public OrdersMapper(OrderDetailMapper orderDetailMapper) {
+        this.orderDetailMapper = orderDetailMapper;
     }
+
     public OrdersDTO toOrdersDTO(Orders model) {
         if (model == null) {
             throw new AppException(ErrorCode.NOTFOUND);
         }
-        OrdersDTO orderDTO = OrdersDTO.builder()
+
+        OrderDetailDTO orderDetailDTO = model.getOrderDetail() != null
+                ? orderDetailMapper.toOrderDetailDTO(model.getOrderDetail())
+                : null;
+
+        return OrdersDTO.builder()
                 .id(model.getId())
                 .orderCode(model.getOrderCode())
                 .total(model.getTotal())
@@ -42,10 +37,7 @@ public class OrdersMapper {
                 .createdBy(model.getCreatedBy())
                 .modifiedBy(model.getModifiedBy())
                 .modifiedDate(model.getModifiedDate())
-                .orderDetails(model.getOrderDetails().stream()
-                        .map(this::toOrderDetailDTO)
-                        .collect(Collectors.toList()))
+                .orderDetail(orderDetailDTO)
                 .build();
-        return orderDTO;
     }
 }

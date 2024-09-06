@@ -45,9 +45,6 @@ public class Food extends BaseEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "food", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderDetail> orderDetails ;
 
     @JsonIgnore
     @OneToMany(mappedBy = "food", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -54,4 +54,12 @@ public class OrderTableController {
         orderTableService.deleteOrderTable(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/accept")
+    public ResponseEntity<ResponseObject> acceptOrderTable(@PathVariable Long id) {
+        OrderTableDTO acceptedOrderTableDTO = orderTableService.acceptOrderTable(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "Order table accepted successfully", acceptedOrderTableDTO)
+        );
+    }
 }

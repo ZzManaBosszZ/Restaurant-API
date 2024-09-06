@@ -40,6 +40,7 @@ public class Orders extends BaseEntity {
     @JsonIgnore
     private Payment payment;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderDetail> orderDetails;
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private OrderDetail orderDetail;
 }

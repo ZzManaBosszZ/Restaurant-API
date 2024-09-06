@@ -22,8 +22,8 @@ public class OrderDetailController {
     @GetMapping("/{orderId}")
     public ResponseEntity<List<OrderDetailDTO>> getOrderDetailsByOrderId(@PathVariable Long orderId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) auth.getPrincipal();
-        List<OrderDetailDTO> orderDetails = orderDetailService.findByOrderId(orderId,currentUser);
+        User currenUser = (User) auth.getPrincipal();
+        List<OrderDetailDTO> orderDetails = orderDetailService.findByOrderId(orderId, currenUser);
         return ResponseEntity.ok(orderDetails);
     }
 
