@@ -4,6 +4,7 @@ import com.restaurant.restaurantapi.dtos.orderdetail.OrderDetailDTO;
 import com.restaurant.restaurantapi.entities.OrderDetail;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -11,8 +12,11 @@ import java.util.stream.Collectors;
 @Component
 public class OrderDetailMapper {
 
+    @Autowired
     private final FoodMapper foodMapper;
+    @Autowired
     private final UserMapper userMapper;
+    @Autowired
     private final FoodOrderDetailMapper foodOrderDetailMapper;
 
     public OrderDetailMapper(FoodMapper foodMapper, UserMapper userMapper, FoodOrderDetailMapper foodOrderDetailMapper) {

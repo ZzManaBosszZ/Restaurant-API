@@ -31,13 +31,19 @@ public class IOrderDetailService implements OrderDetailService {
     private final OrdersRepository ordersRepository;
 
     @Override
-    public List<OrderDetailDTO> findByOrderId(Long orderId, User user) {
+    public OrderDetailDTO findByOrderId(Long orderId, User user) {
         Orders order = ordersRepository.findById(orderId)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        List<OrderDetail> orderDetails = orderDetailRepository.findByOrder(order);
-        return orderDetails.stream()
-                .map(orderDetailMapper::toOrderDetailDTO)
-                .collect(Collectors.toList());
+
+        // Sử dụng phương thức mới để lấy đối tượng OrderDetail đầu tiên
+        OrderDetail orderDetail = orderDetailRepository.findFirstByOrder(order);
+
+        if (orderDetail == null) {
+            throw new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND);
+        }
+
+        // Trả về một đối tượng OrderDetailDTO duy nhất
+        return orderDetailMapper.toOrderDetailDTO(orderDetail);
     }
 
     @Override

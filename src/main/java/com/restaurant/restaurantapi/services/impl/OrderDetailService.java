@@ -7,7 +7,7 @@ import com.restaurant.restaurantapi.models.orderdetail.CreateOrderDetail;
 import java.util.List;
 
 public interface OrderDetailService {
-    List<OrderDetailDTO> findByOrderId(Long orderId, User user);
+    OrderDetailDTO findByOrderId(Long orderId, User user);
     OrderDetailDTO findById(Long id);
 //    OrderDetailDTO createOrderDetail(Long orderId, CreateOrderDetail createOrderDetail);
 
