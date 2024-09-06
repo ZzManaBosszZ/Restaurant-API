@@ -4,6 +4,7 @@ import com.restaurant.restaurantapi.dtos.orderdetail.OrderDetailDTO;
 import com.restaurant.restaurantapi.entities.Food;
 import com.restaurant.restaurantapi.entities.OrderDetail;
 import com.restaurant.restaurantapi.entities.Orders;
+import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.exceptions.ErrorCode;
 import com.restaurant.restaurantapi.mappers.OrderDetailMapper;
@@ -30,7 +31,7 @@ public class IOrderDetailService implements OrderDetailService {
     private final OrdersRepository ordersRepository;
 
     @Override
-    public List<OrderDetailDTO> findByOrderId(Long orderId) {
+    public List<OrderDetailDTO> findByOrderId(Long orderId, User user) {
         Orders order = ordersRepository.findById(orderId)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         List<OrderDetail> orderDetails = orderDetailRepository.findByOrder(order);

@@ -12,6 +12,6 @@ public interface AdminService {
     DeliveredOrderDTO getDeliveredOrders(User currentUser);
     CancelledOrderDTO getCancelledOrders(User currentUser);
     TotalRevenueDTO getTotalRevenue(User currentUser);
-    DailyRevenueDTO getDailyRevenue(User currentUser);
+//    DailyRevenueDTO getDailyRevenue(User currentUser);
 
 }
