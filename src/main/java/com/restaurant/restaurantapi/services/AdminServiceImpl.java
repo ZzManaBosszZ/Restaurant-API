@@ -157,43 +157,43 @@ public class AdminServiceImpl implements AdminService {
         calendar.add(Calendar.DAY_OF_MONTH, -15);
         return calendar.getTime();
     }
-    @Override
-    public DailyRevenueDTO getDailyRevenue(User user) {
-        // Lấy doanh thu hôm nay
-        double totalRevenueToday = calculateTotalRevenueByDate(LocalDate.now());
-
-        // Lấy doanh thu tuần trước
-        LocalDate startOfLastWeek = LocalDate.now().minusWeeks(1).with(DayOfWeek.MONDAY);
-        LocalDate endOfLastWeek = startOfLastWeek.plusDays(6);
-        double totalRevenueLastWeek = calculateTotalRevenueByDateRange(startOfLastWeek, endOfLastWeek);
-
-        // Tính toán phần trăm tăng trưởng so với tuần trước
-        double percentageGrowthLastWeek = 0;
-        if (totalRevenueLastWeek > 0) {
-            percentageGrowthLastWeek = ((totalRevenueToday - totalRevenueLastWeek) / totalRevenueLastWeek) * 100;
-        }
-
-        return DailyRevenueDTO.builder()
-                .totalRevenueToday(totalRevenueToday)
-                .percentageGrowthLastWeek(percentageGrowthLastWeek)
-                .build();
-    }
-
-    private double calculateTotalRevenueByDate(LocalDate date) {
-        Date startDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date endDate = Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailsByDateRange(startDate, endDate);
-        return orderDetails.stream()
-                .mapToDouble(OrderDetail::getUnitPrice)
-                .sum();
-    }
-
-    private double calculateTotalRevenueByDateRange(LocalDate startDate, LocalDate endDate) {
-        Date start = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date end = Date.from(endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-        List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailsByDateRange(start, end);
-        return orderDetails.stream()
-                .mapToDouble(OrderDetail::getUnitPrice) // Lấy giá trị unitPrice kiểu double
-                .sum();
-    }
+//    @Override
+//    public DailyRevenueDTO getDailyRevenue(User user) {
+//        // Lấy doanh thu hôm nay
+//        double totalRevenueToday = calculateTotalRevenueByDate(LocalDate.now());
+//
+//        // Lấy doanh thu tuần trước
+//        LocalDate startOfLastWeek = LocalDate.now().minusWeeks(1).with(DayOfWeek.MONDAY);
+//        LocalDate endOfLastWeek = startOfLastWeek.plusDays(6);
+//        double totalRevenueLastWeek = calculateTotalRevenueByDateRange(startOfLastWeek, endOfLastWeek);
+//
+//        // Tính toán phần trăm tăng trưởng so với tuần trước
+//        double percentageGrowthLastWeek = 0;
+//        if (totalRevenueLastWeek > 0) {
+//            percentageGrowthLastWeek = ((totalRevenueToday - totalRevenueLastWeek) / totalRevenueLastWeek) * 100;
+//        }
+//
+//        return DailyRevenueDTO.builder()
+//                .totalRevenueToday(totalRevenueToday)
+//                .percentageGrowthLastWeek(percentageGrowthLastWeek)
+//                .build();
+//    }
+//
+//    private double calculateTotalRevenueByDate(LocalDate date) {
+//        Date startDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//        Date endDate = Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+//        List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailsByDateRange(startDate, endDate);
+//        return orderDetails.stream()
+//                .mapToDouble(OrderDetail::getUnitPrice)
+//                .sum();
+//    }
+//
+//    private double calculateTotalRevenueByDateRange(LocalDate startDate, LocalDate endDate) {
+//        Date start = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+//        Date end = Date.from(endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+//        List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailsByDateRange(start, end);
+//        return orderDetails.stream()
+//                .mapToDouble(OrderDetail::getUnitPrice) // Lấy giá trị unitPrice kiểu double
+//                .sum();
+//    }
 }

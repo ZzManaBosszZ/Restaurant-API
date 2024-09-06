@@ -18,7 +18,7 @@ public class OrdersDTO {
     private BigDecimal total;
     private boolean isPaid;
     private OrderStatus status;
-    private List<OrderDetailDTO> orderDetails;
+    private OrderDetailDTO orderDetail;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;

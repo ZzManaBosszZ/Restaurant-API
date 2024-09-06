@@ -46,8 +46,6 @@ public class Food extends BaseEntity {
     private Category category;
 
 
-    @OneToMany(mappedBy = "food", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderDetail> orderDetails ;
 
     @OneToMany(mappedBy = "food", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Review> reviews ;
