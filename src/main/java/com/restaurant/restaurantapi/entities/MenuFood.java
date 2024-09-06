@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "menufood")
 @SuperBuilder
 public class MenuFood extends BaseEntity {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "menu_id")
     private Menu menu;
 
