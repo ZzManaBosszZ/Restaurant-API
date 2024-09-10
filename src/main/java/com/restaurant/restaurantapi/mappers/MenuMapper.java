@@ -13,14 +13,14 @@ public class MenuMapper {
         if (menu == null) {
             return null;
         }
-        List<Long> menuFoodIds = menu.getMenuFoods().stream()
-                .map(MenuFood::getId)
-                .collect(Collectors.toList());
+//        List<Long> menuFoodIds = menu.getMenuFoods().stream()
+//                .map(MenuFood::getId)
+//                .collect(Collectors.toList());
         return MenuDTO.builder()
                 .id(menu.getId())
                 .name(menu.getName())
                 .image(menu.getImage())
-                .menuFoodIds(menuFoodIds)
+//                .menuFoodIds(menuFoodIds)
                 .description(menu.getDescription())
                 .createdBy(menu.getCreatedBy())
                 .createdDate(menu.getCreatedDate())
