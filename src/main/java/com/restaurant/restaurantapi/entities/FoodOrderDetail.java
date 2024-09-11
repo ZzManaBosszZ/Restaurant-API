@@ -3,8 +3,10 @@ package com.restaurant.restaurantapi.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
@@ -31,4 +33,8 @@ public class FoodOrderDetail {
 
     @Column(name = "unit_price")
     private BigDecimal unitPrice;
+
+    @Column(name = "createddate")
+    @CreatedDate
+    private Timestamp createdDate;
 }

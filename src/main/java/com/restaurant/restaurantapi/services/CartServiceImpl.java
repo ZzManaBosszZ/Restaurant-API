@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 import java.util.Optional;
 
 @Service
@@ -48,32 +49,6 @@ public class CartServiceImpl implements CartService {
         return cartMapper.toCartDTO(cart);
     }
 
-//    @Override
-//    public CartDTO addToCart(AddToCartModel addToCartModel, User user, HttpSession session) {
-//        Cart cart = (Cart) session.getAttribute("cart");
-//        if (cart == null || !cart.getUser().equals(user)) {
-//        }
-//        CartItem existingItem = cart.getItems().stream()
-//                .filter(item -> item.getFood().getId().equals(addToCartModel.getFoodId()))
-//                .findFirst()
-//                .orElse(null);
-//
-//        if (existingItem != null) {
-//            existingItem.setQuantity(existingItem.getQuantity() + addToCartModel.getQuantity());
-//            cartItemRepository.save(existingItem);
-//        } else {
-//            Food food = foodRepository.findById(addToCartModel.getFoodId())
-//                    .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
-//            CartItem newItem = cartItemMapper.toCartItem(addToCartModel, cart, food);
-//            newItem.setCreatedBy(user.getUsername());
-//            newItem.setModifiedBy(user.getUsername());
-//            cartItemRepository.save(newItem);
-//            cart.getItems().add(newItem);
-//        }
-//
-//        session.setAttribute("cart", cart);
-//        return cartMapper.toCartDTO(cart);
-//    }
     @Override
     public CartDTO addToCart(AddToCartModel addToCartModel, User user, HttpSession session) {
         Cart cart = getCartEntityByUser(user, session);
@@ -156,5 +131,6 @@ public class CartServiceImpl implements CartService {
         }
         return cart;
     }
+
 
 }

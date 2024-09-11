@@ -23,6 +23,7 @@ public class FoodOrderDetailMapper {
                 .food(foodMapper.toFoodSummaryDTO(model.getFood()))
                 .quantity(model.getQuantity())
                 .unitPrice(model.getUnitPrice())
+                .createdDate(model.getCreatedDate())
                 .build();
     }
 }

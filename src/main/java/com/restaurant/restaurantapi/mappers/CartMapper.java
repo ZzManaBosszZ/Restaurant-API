@@ -38,11 +38,14 @@ public class CartMapper {
         }
         Food food = cartItem.getFood();
         return CartItemDTO.builder()
+                .id(cartItem.getId())
                 .foodId(food.getId())
                 .foodName(food.getName())
                 .foodImage(food.getImage())
                 .foodPrice(food.getPrice())
                 .quantity(cartItem.getQuantity())
+                .createdBy(cartItem.getCreatedBy())
+                .modifiedBy(cartItem.getModifiedBy())
                 .build();
     }
 }
