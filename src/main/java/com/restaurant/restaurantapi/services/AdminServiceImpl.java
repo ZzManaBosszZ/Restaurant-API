@@ -3,10 +3,8 @@ package com.restaurant.restaurantapi.services;
 import com.restaurant.restaurantapi.dtos.menuadmin.Menu;
 import com.restaurant.restaurantapi.dtos.menuadmin.MenuItem;
 import com.restaurant.restaurantapi.dtos.orders.*;
-import com.restaurant.restaurantapi.entities.OrderDetail;
-import com.restaurant.restaurantapi.entities.OrderStatus;
-import com.restaurant.restaurantapi.entities.Role;
-import com.restaurant.restaurantapi.entities.User;
+import com.restaurant.restaurantapi.entities.*;
+import com.restaurant.restaurantapi.repositories.FoodOrderDetailRepository;
 import com.restaurant.restaurantapi.repositories.OrderDetailRepository;
 import com.restaurant.restaurantapi.repositories.OrdersRepository;
 import com.restaurant.restaurantapi.services.impl.AdminService;
@@ -28,8 +26,8 @@ import java.util.stream.Collectors;
 public class AdminServiceImpl implements AdminService {
 
     private final OrdersRepository ordersRepository;
+    private final FoodOrderDetailRepository foodOrderDetailRepository;
 
-    private final OrderDetailRepository orderDetailRepository;
     @Override
     public List<Menu> getMenu(User currenUser) {
         List<Menu> menus = new ArrayList<>();
@@ -107,8 +105,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public DeliveredOrderDTO getDeliveredOrders(User currentUser) {
-        Long deliveredOrders = ordersRepository.countByStatus(OrderStatus.paid);
-        Long deliveredOrdersLast15Days = ordersRepository.countDeliveredOrdersFromDate(OrderStatus.paid, getDate15DaysAgo());
+        Long deliveredOrders = ordersRepository.countByStatus(OrderStatus.completed);
+        Long deliveredOrdersLast15Days = ordersRepository.countDeliveredOrdersFromDate(OrderStatus.completed, getDate15DaysAgo());
 
         double percentageGrowth = 0;
         if (deliveredOrdersLast15Days > 0) {
@@ -157,43 +155,44 @@ public class AdminServiceImpl implements AdminService {
         calendar.add(Calendar.DAY_OF_MONTH, -15);
         return calendar.getTime();
     }
-//    @Override
-//    public DailyRevenueDTO getDailyRevenue(User user) {
-//        // Lấy doanh thu hôm nay
-//        double totalRevenueToday = calculateTotalRevenueByDate(LocalDate.now());
-//
-//        // Lấy doanh thu tuần trước
-//        LocalDate startOfLastWeek = LocalDate.now().minusWeeks(1).with(DayOfWeek.MONDAY);
-//        LocalDate endOfLastWeek = startOfLastWeek.plusDays(6);
-//        double totalRevenueLastWeek = calculateTotalRevenueByDateRange(startOfLastWeek, endOfLastWeek);
-//
-//        // Tính toán phần trăm tăng trưởng so với tuần trước
-//        double percentageGrowthLastWeek = 0;
-//        if (totalRevenueLastWeek > 0) {
-//            percentageGrowthLastWeek = ((totalRevenueToday - totalRevenueLastWeek) / totalRevenueLastWeek) * 100;
-//        }
-//
-//        return DailyRevenueDTO.builder()
-//                .totalRevenueToday(totalRevenueToday)
-//                .percentageGrowthLastWeek(percentageGrowthLastWeek)
-//                .build();
-//    }
-//
-//    private double calculateTotalRevenueByDate(LocalDate date) {
-//        Date startDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        Date endDate = Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailsByDateRange(startDate, endDate);
-//        return orderDetails.stream()
-//                .mapToDouble(OrderDetail::getUnitPrice)
-//                .sum();
-//    }
-//
-//    private double calculateTotalRevenueByDateRange(LocalDate startDate, LocalDate endDate) {
-//        Date start = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        Date end = Date.from(endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        List<OrderDetail> orderDetails = orderDetailRepository.findOrderDetailsByDateRange(start, end);
-//        return orderDetails.stream()
-//                .mapToDouble(OrderDetail::getUnitPrice) // Lấy giá trị unitPrice kiểu double
-//                .sum();
-//    }
+    @Override
+    public DailyRevenueDTO getDailyRevenue(User user) {
+        // Lấy doanh thu hôm nay
+        double totalRevenueToday = calculateTotalRevenueByDate(LocalDate.now());
+
+        // Lấy doanh thu tuần trước
+        LocalDate startOfLastWeek = LocalDate.now().minusWeeks(1).with(DayOfWeek.MONDAY);
+        LocalDate endOfLastWeek = startOfLastWeek.plusDays(6);
+        double totalRevenueLastWeek = calculateTotalRevenueByDateRange(startOfLastWeek, endOfLastWeek);
+
+        // Tính toán phần trăm tăng trưởng so với tuần trước
+        double percentageGrowthLastWeek = 0;
+        if (totalRevenueLastWeek > 0) {
+            percentageGrowthLastWeek = ((totalRevenueToday - totalRevenueLastWeek) / totalRevenueLastWeek) * 100;
+        }
+
+        return DailyRevenueDTO.builder()
+                .totalRevenueToday(totalRevenueToday)
+                .percentageGrowthLastWeek(percentageGrowthLastWeek)
+                .build();
+    }
+
+    private double calculateTotalRevenueByDate(LocalDate date) {
+        Date startDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date endDate = Date.from(date.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<FoodOrderDetail> foodOrderDetails = foodOrderDetailRepository.findOrderDetailsByDateRange(startDate, endDate);
+        return foodOrderDetails.stream()
+                .mapToDouble(foodOrderDetail -> foodOrderDetail.getUnitPrice().doubleValue() * foodOrderDetail.getQuantity())
+                .sum();
+    }
+
+    private double calculateTotalRevenueByDateRange(LocalDate startDate, LocalDate endDate) {
+        Date start = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date end = Date.from(endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        List<FoodOrderDetail> foodOrderDetails = foodOrderDetailRepository.findOrderDetailsByDateRange(start, end);
+        return foodOrderDetails.stream()
+                .mapToDouble(foodOrderDetail -> foodOrderDetail.getUnitPrice().doubleValue() * foodOrderDetail.getQuantity())
+                .sum();
+    }
+
 }
