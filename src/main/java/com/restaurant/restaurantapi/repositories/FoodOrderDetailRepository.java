@@ -14,3 +14,4 @@ public interface FoodOrderDetailRepository extends JpaRepository<FoodOrderDetail
     @Query("SELECT f FROM FoodOrderDetail f WHERE f.createdDate BETWEEN :startDate AND :endDate")
     List<FoodOrderDetail> findOrderDetailsByDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }
+
