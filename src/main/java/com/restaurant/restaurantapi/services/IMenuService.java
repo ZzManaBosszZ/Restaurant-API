@@ -23,8 +23,9 @@ public class IMenuService implements MenuService {
     private final MenuRepository menuRepository;
     private final MenuMapper menuMapper;
     private final StorageService storageService;
+
     @Override
-    public MenuDTO create(CreateMenu createMenu , User user) throws AppException {
+    public MenuDTO create(CreateMenu createMenu,  User user) {
         String generatedFileName = storageService.storeFile(createMenu.getImage());
         Menu menu = Menu.builder()
                 .name(createMenu.getName())
@@ -64,7 +65,13 @@ public class IMenuService implements MenuService {
 
     @Override
     public void delete(Long[] ids) {
-        menuRepository.deleteAllById(List.of(ids));
+        for (Long id : ids) {
+            if (menuRepository.existsById(id)) {
+                menuRepository.deleteById(id);
+            } else {
+                throw new AppException(ErrorCode.FOOD_NOTFOUND);
+            }
+        }
     }
 
     @Override

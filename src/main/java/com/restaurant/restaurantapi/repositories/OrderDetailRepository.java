@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
-    List<OrderDetail> findByOrder(Orders order);
+    OrderDetail findFirstByOrder(Orders order);
 
     @Query("SELECT od FROM OrderDetail od WHERE od.createdDate BETWEEN :startDate AND :endDate")
     List<OrderDetail> findOrderDetailsByDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);

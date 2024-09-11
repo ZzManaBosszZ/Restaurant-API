@@ -38,3 +38,4 @@ public class FoodOrderDetail {
     @CreatedDate
     private Timestamp createdDate;
 }
+
