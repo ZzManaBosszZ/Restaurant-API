@@ -28,7 +28,7 @@ public enum ErrorCode {
     EXPIRES(400, "Expires", HttpStatus.BAD_REQUEST),
     //storage
     INITIALIZE(400, "Cannot initialize storage", HttpStatus.BAD_REQUEST),
-
+    CART_EMPTY(400, "Cart is empty", HttpStatus.BAD_REQUEST),
     // Category
     CATEGORY_NOTFOUND(404, "Category Not Found", HttpStatus.NOT_FOUND),
     CATEGORY_EXISTED(400, "Category name existed", HttpStatus.BAD_REQUEST),

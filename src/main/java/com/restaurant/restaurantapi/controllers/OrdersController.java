@@ -5,6 +5,7 @@ import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
 import com.restaurant.restaurantapi.models.orders.CreateOrders;
 import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.services.impl.OrdersService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -39,7 +40,7 @@ public class OrdersController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<ResponseObject> create(@Valid @RequestBody CreateOrders createOrders) {
+    public ResponseEntity<ResponseObject> create(HttpSession  session) throws  Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
         if (currentUser == null) {
@@ -47,7 +48,7 @@ public class OrdersController {
                     new ResponseObject(false, 401, "User not authenticated", null)
             );
         }
-        OrdersDTO ordersDTO = ordersService.create(createOrders, currentUser);
+        OrdersDTO ordersDTO = ordersService.create(currentUser, session);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new ResponseObject(true, 201, "Create Success", ordersDTO)
         );

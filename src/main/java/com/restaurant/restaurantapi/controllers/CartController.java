@@ -2,6 +2,7 @@ package com.restaurant.restaurantapi.controllers;
 
 import com.restaurant.restaurantapi.dtos.ResponseObject;
 import com.restaurant.restaurantapi.dtos.cart.CartDTO;
+import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
 import com.restaurant.restaurantapi.models.cart.AddToCartModel;
 import com.restaurant.restaurantapi.models.cart.UpdateCartItemModel;
 import com.restaurant.restaurantapi.services.impl.CartService;
@@ -70,4 +71,14 @@ public class CartController {
                 new ResponseObject(true, 200, "Clear Cart Success", null)
         );
     }
+//    @PostMapping("/checkout")
+//    public ResponseEntity<ResponseObject> checkoutCart(HttpSession session) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        User currentUser = (User) auth.getPrincipal();
+//
+//        OrdersDTO order = cartService.checkoutCart(currentUser, session);
+//        return ResponseEntity.ok(
+//                new ResponseObject(true, 200, "Checkout Success", order)
+//        );
+//    }
 }
