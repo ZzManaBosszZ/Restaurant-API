@@ -40,7 +40,7 @@ public class OrdersController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<ResponseObject> create(HttpSession  session) throws  Exception {
+    public ResponseEntity<ResponseObject> create(@Valid @RequestBody CreateOrders createOrders) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
         if (currentUser == null) {
@@ -48,7 +48,7 @@ public class OrdersController {
                     new ResponseObject(false, 401, "User not authenticated", null)
             );
         }
-        OrdersDTO ordersDTO = ordersService.create(currentUser, session);
+        OrdersDTO ordersDTO = ordersService.create(createOrders, currentUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new ResponseObject(true, 201, "Create Success", ordersDTO)
         );

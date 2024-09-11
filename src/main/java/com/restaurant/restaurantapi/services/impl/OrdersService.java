@@ -10,7 +10,8 @@ import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 public interface OrdersService {
-    OrdersDTO create(User user, HttpSession session);
+//    OrdersDTO create(User user, HttpSession session);
+    OrdersDTO create(CreateOrders createOrders, User user);
     void delete(Long id);
     OrdersDTO findById(Long id);
     List<OrdersDTO> findAll();
