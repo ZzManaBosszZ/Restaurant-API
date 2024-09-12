@@ -86,14 +86,4 @@ public class AdminController {
 //        );
 //    }
 
-    @GetMapping("/daily-revenue")
-    public ResponseEntity<ResponseObject> getDailyRevenue() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currenUser = (User) auth.getPrincipal();
-        DailyRevenueDTO dailyRevenue = adminService.getDailyRevenue(currenUser);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok" , dailyRevenue)
-        );
-    }
-
 }
