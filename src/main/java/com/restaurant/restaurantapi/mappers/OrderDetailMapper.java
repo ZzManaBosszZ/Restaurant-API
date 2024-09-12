@@ -14,8 +14,10 @@ public class OrderDetailMapper {
 
     private final UserMapper userMapper;
     private final FoodOrderDetailMapper foodOrderDetailMapper;
+    private final FoodMapper foodMapper;
 
-    public OrderDetailMapper( UserMapper userMapper, FoodOrderDetailMapper foodOrderDetailMapper) {
+    public OrderDetailMapper(FoodMapper foodMapper, UserMapper userMapper, FoodOrderDetailMapper foodOrderDetailMapper) {
+        this.foodMapper = foodMapper;
 
         this.userMapper = userMapper;
         this.foodOrderDetailMapper = foodOrderDetailMapper;

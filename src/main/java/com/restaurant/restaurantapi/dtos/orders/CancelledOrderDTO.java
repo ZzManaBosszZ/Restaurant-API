@@ -6,6 +6,8 @@ import lombok.Data;
 @Data
 @Builder
 public class CancelledOrderDTO {
-    private Long cancelledOrders;
-    private double percentageGrowth; // Phần trăm tăng trưởng
+    private int year;
+    private int month;
+    private long totalOrders;
+    private double percentageGrowth;; // Phần trăm tăng trưởng
 }
