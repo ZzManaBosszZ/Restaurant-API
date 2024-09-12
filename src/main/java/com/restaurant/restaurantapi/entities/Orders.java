@@ -34,9 +34,8 @@ public class Orders extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Payment payment;
+    @Column(name = "paymentMethod", nullable = false)
+    private String paymentMethod;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     @JsonIgnore
