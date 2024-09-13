@@ -39,7 +39,7 @@ public class AdminController {
     public ResponseEntity<ResponseObject> getTotalOrders() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
-        TotalOrderDTO totalOrderDTO = adminService.getTotalOrders(currentUser);
+        List<TotalOrderDTO> totalOrderDTO = adminService.getTotalOrdersLast12Months(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", totalOrderDTO)
         );
@@ -49,7 +49,7 @@ public class AdminController {
     public ResponseEntity<ResponseObject> getDeliveredOrders() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
-        DeliveredOrderDTO deliveredOrderDTO = adminService.getDeliveredOrders(currentUser);
+        List<DeliveredOrderDTO> deliveredOrderDTO = adminService.getDeliveredOrdersRevenueLast12Months(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", deliveredOrderDTO)
         );
@@ -59,7 +59,7 @@ public class AdminController {
     public ResponseEntity<ResponseObject> getCancelledOrders() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
-        CancelledOrderDTO cancelledOrderDTO = adminService.getCancelledOrders(currentUser);
+        List<CancelledOrderDTO> cancelledOrderDTO = adminService.getCancelledOrdersRevenueLast12Months(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", cancelledOrderDTO)
         );
@@ -70,17 +70,18 @@ public class AdminController {
     public ResponseEntity<ResponseObject> getTotalRevenue() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
-        TotalRevenueDTO totalRevenueDTO = adminService.getTotalRevenue(currentUser);
+        List<TotalRevenueDTO> totalRevenueDTO = adminService.getTotalMonthlyRevenueLast12Months(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", totalRevenueDTO)
         );
     }
 
+
     @GetMapping("/daily-revenue")
     public ResponseEntity<ResponseObject> getDailyRevenue() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currenUser = (User) auth.getPrincipal();
-        DailyRevenueDTO dailyRevenue = adminService.getDailyRevenue(currenUser);
+        List<DailyRevenueDTO> dailyRevenue = adminService.getDailyRevenue(currenUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok" , dailyRevenue)
         );
