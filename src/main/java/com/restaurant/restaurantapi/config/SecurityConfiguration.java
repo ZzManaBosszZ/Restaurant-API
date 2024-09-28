@@ -59,7 +59,7 @@ public class SecurityConfiguration {
                     configuration.applyPermitDefaultValues();
                     return configuration;*/
                     CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://127.0.0.1:5500"));
+                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5000","http://localhost:3000"));
                     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
@@ -69,12 +69,14 @@ public class SecurityConfiguration {
                 }))
                 .authorizeHttpRequests(request -> request.requestMatchers("/api/v1/auth/**")
                         .permitAll()
-                        .requestMatchers("/api/v1/any/**").permitAll()
+                        .requestMatchers("/api/v1/any/**","/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**").permitAll()
                         //.requestMatchers("/api/v1/any/tutor/**").permitAll()
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/api/v1/FileUpload/**").permitAll()
                         .requestMatchers("/api/v1/admin/**").hasAnyAuthority(Role.ADMIN.name())
-                        .requestMatchers("/api/v1/user/**").hasAnyAuthority(Role.USER.name())
+                        .requestMatchers("/api/v1/user/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

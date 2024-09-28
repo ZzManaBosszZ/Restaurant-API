@@ -25,6 +25,7 @@ public class RestaurantApiApplication {
 			}
 		};
 	}
+
 	@Bean
 	public Executor taskExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
