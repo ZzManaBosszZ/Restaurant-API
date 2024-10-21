@@ -56,6 +56,8 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
             "ORDER BY cos.createdDate", nativeQuery = true)
     List<Object[]> getDailyRevenue(@Param("startDate") Timestamp startDate);
 
+    List<Orders> findByUserId(Long userId);
+
 
 
 

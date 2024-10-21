@@ -1,11 +1,13 @@
 package com.restaurant.restaurantapi.services;
 
+import com.restaurant.restaurantapi.dtos.UserDTO;
 import com.restaurant.restaurantapi.dtos.menuadmin.Menu;
 import com.restaurant.restaurantapi.dtos.menuadmin.MenuItem;
 import com.restaurant.restaurantapi.dtos.orders.*;
 import com.restaurant.restaurantapi.entities.*;
-import com.restaurant.restaurantapi.repositories.FoodOrderDetailRepository;
+import com.restaurant.restaurantapi.mappers.UserMapper;
 import com.restaurant.restaurantapi.repositories.OrdersRepository;
+import com.restaurant.restaurantapi.repositories.UserRepository;
 import com.restaurant.restaurantapi.services.impl.AdminService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -27,7 +28,8 @@ import java.util.stream.Collectors;
 public class AdminServiceImpl implements AdminService {
 
     private final OrdersRepository ordersRepository;
-    private final FoodOrderDetailRepository foodOrderDetailRepository;
+    private final UserRepository  userRepository;
+    private  final UserMapper userMapper;
 
     @Override
     public List<Menu> getMenu(User currenUser) {
@@ -287,6 +289,37 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return result;
+    }
+
+    @Override
+    public List<UserDTO> getUser(User currenUser) {
+        return userRepository.findAll().stream()
+                .map(userMapper::toUserSummaryDTO)
+                .toList();
+    }
+    @Override
+    public UserOrdersResponseDTO getOrdersByUser(Long userId, User currentUser) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<OrdersUserDTO> orders = ordersRepository.findByUserId(userId).stream()
+                .map(order -> OrdersUserDTO.builder()
+                        .id(order.getId())
+                        .orderCode(order.getOrderCode())
+                        .total(order.getTotal())
+                        .status(order.getStatus())
+                        .isPaid(order.isPaid())
+                        .createdDate(order.getCreatedDate())
+                        .modifiedDate(order.getModifiedDate())
+                        .createdBy(order.getCreatedBy())
+                        .modifiedBy(order.getModifiedBy())
+                        .build())
+                .collect(Collectors.toList());
+
+        return UserOrdersResponseDTO.builder()
+                .user(userMapper.toUserSummaryDTO(user))
+                .orders(orders)
+                .build();
     }
 
     private double calculatePercentageGrowth(double oldValue, double newValue) {
