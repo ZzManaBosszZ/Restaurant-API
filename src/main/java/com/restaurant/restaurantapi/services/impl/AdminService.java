@@ -1,5 +1,6 @@
 package com.restaurant.restaurantapi.services.impl;
 
+import com.restaurant.restaurantapi.dtos.UserDTO;
 import com.restaurant.restaurantapi.dtos.menuadmin.Menu;
 import com.restaurant.restaurantapi.dtos.orders.*;
 import com.restaurant.restaurantapi.entities.User;
@@ -13,6 +14,6 @@ public interface AdminService {
     List<CancelledOrderDTO> getCancelledOrdersRevenueLast12Months(User currentUser);
     List<TotalRevenueDTO> getTotalMonthlyRevenueLast12Months(User currentUser);
     List<DailyRevenueDTO> getDailyRevenue(User currentUser);
-
-
+    List<UserDTO> getUser(User currenUser);
+    UserOrdersResponseDTO getOrdersByUser(Long userId, User currenUser);
 }
