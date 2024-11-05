@@ -49,6 +49,7 @@ public class IOrdersService implements OrdersService {
                 .isPaid(false)
                 .status(OrderStatus.pending)
                 .user(user)
+                .paymentMethod(createOrders.getPaymentMethod())
                 .createdBy(user.getFullName())
                 .modifiedBy(user.getFullName())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
