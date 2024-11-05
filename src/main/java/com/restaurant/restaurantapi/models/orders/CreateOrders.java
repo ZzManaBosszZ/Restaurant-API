@@ -17,4 +17,6 @@ public class CreateOrders {
 
     // Discount to be applied to the order
     private BigDecimal discount;
+
+    private String paymentMethod;
 }

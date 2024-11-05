@@ -28,17 +28,9 @@ public class IReviewService implements ReviewService {
     private final ReviewMapper reviewMapper;
 
     @Override
-    public ReviewDTO create(CreateReview model, Long userId, Long foodId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        Food food = foodRepository.findById(foodId)
-                .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
-
-        Review existingReview = reviewRepository.findByFoodAndUser(food, user);
-        if (existingReview != null) {
-            throw new AppException(ErrorCode.REVIEW_EXISTED);
-        }
-
+    public ReviewDTO create(CreateReview model, User user) throws AppException {
+        Food food = foodRepository.findById(model.getFoodId())
+                .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
         Review review = Review.builder()
                 .rating(model.getRating())
                 .message(model.getMessage())
@@ -57,9 +49,11 @@ public class IReviewService implements ReviewService {
     @Override
     public void delete(Long[] ids) {
         for (Long id : ids) {
-            Optional<Review> reviewOptional = reviewRepository.findById(id);
+            Optional<Review> reviewOptional = reviewRepository.findById(id)
+                    ;
             if (reviewOptional.isPresent()) {
-                reviewRepository.deleteById(id);
+                reviewRepository.deleteById(id)
+                ;
             } else {
                 throw new AppException(ErrorCode.REVIEW_NOT_FOUND);
             }
@@ -69,6 +63,7 @@ public class IReviewService implements ReviewService {
     @Override
     public ReviewDTO findById(Long id) {
         Review review = reviewRepository.findById(id)
+
                 .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
         return reviewMapper.toReviewDTO(review);
     }
