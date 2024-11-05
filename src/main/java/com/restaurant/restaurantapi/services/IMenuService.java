@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -32,6 +33,7 @@ public class IMenuService implements MenuService {
                 .image("http://localhost:8080/api/v1/FileUpload/files/" + generatedFileName)
                 .description(createMenu.getDescription())
                 .createdBy(user.getUsername())
+                .menuFoods(new ArrayList<>())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedBy(user.getUsername())
                 .modifiedDate(new Timestamp(System.currentTimeMillis()))
