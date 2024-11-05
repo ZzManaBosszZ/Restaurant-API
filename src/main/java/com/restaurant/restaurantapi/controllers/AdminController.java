@@ -78,7 +78,6 @@ public class AdminController {
         );
     }
 
-
     @GetMapping("/daily-revenue")
     public ResponseEntity<ResponseObject> getDailyRevenue() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
