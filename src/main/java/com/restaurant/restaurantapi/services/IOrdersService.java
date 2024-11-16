@@ -104,6 +104,11 @@ public class IOrdersService implements OrdersService {
         // Set total price in Order
         order.setTotal(total);
 
+        if ("paypal".equalsIgnoreCase(createOrders.getPaymentMethod())) {
+//            order.IsPaid(true);
+            order.setStatus(OrderStatus.paid);
+        }
+
         // Save Order and FoodOrderDetail
         OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
         foodOrderDetailRepository.saveAll(foodOrderDetails);
