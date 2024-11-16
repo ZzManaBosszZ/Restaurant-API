@@ -28,7 +28,7 @@ public class Menu extends BaseEntity {
     private String image;
 
     @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<MenuFood> menuFoods;
+    private List<MenuFood> menuFoods = new ArrayList<>();
 
     @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderTable> orderTables;

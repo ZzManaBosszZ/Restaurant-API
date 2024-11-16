@@ -1,4 +1,6 @@
 package com.restaurant.restaurantapi.services;
+
+
 import com.restaurant.restaurantapi.dtos.cart.CartDTO;
 import com.restaurant.restaurantapi.entities.*;
 import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
@@ -104,6 +106,11 @@ public class IOrdersService implements OrdersService {
         // Set total price in Order
         order.setTotal(total);
 
+        if ("paypal".equalsIgnoreCase(createOrders.getPaymentMethod())) {
+//            order.IsPaid(true);
+            order.setStatus(OrderStatus.paid);
+        }
+
         // Save Order and FoodOrderDetail
         OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
         foodOrderDetailRepository.saveAll(foodOrderDetails);
@@ -191,10 +198,11 @@ public class IOrdersService implements OrdersService {
 //
 //        return ordersMapper.toOrdersDTO(savedOrder);
 //    }
-  
+
     @Override
     public OrdersDTO findById(Long id) {
         Orders order = ordersRepository.findById(id)
+
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         return ordersMapper.toOrdersDTO(order);
     }
@@ -209,6 +217,7 @@ public class IOrdersService implements OrdersService {
     @Override
     public void delete(Long id) {
         Orders order = ordersRepository.findById(id)
+
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         ordersRepository.delete(order);
     }
