@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/menu-food")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class MenuFoodController {
 
     private final MenuFoodService menuFoodService;
 
-    @PostMapping
+    @PostMapping("/menu-food")
     public ResponseEntity<ResponseObject> createMenuFood(@RequestBody CreateMenuFood createMenuFood) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
@@ -93,7 +93,7 @@ public class MenuFoodController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/any/menu-food")
     public ResponseEntity<ResponseObject> findAllMenuFoods() {
         List<MenuFoodDTO> menuFoodDTOs = menuFoodService.findAll();
         return ResponseEntity.ok(
