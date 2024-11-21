@@ -262,16 +262,22 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<DailyRevenueDTO> getDailyRevenue(User currentUser) {
         LocalDate now = LocalDate.now();
-        LocalDate startDate = now.minusMonths(12).withDayOfMonth(1);
+        LocalDate startDate = now.minusMonths(12).withDayOfMonth(1);  // Lấy dữ liệu từ 12 tháng gần nhất
         Timestamp startTimestamp = Timestamp.valueOf(startDate.atStartOfDay());
 
+        // Lấy dữ liệu từ repository
         List<Object[]> dailyRevenueData = ordersRepository.getDailyRevenue(startTimestamp);
+
+        // Tạo một Map để chứa tổng doanh thu của mỗi ngày
         Map<LocalDate, BigDecimal> revenueMap = new HashMap<>();
 
+        // Duyệt qua dữ liệu từ cơ sở dữ liệu và tính tổng doanh thu cho mỗi ngày
         for (Object[] result : dailyRevenueData) {
             LocalDate date = ((Timestamp) result[0]).toLocalDateTime().toLocalDate();
             BigDecimal totalRevenue = (BigDecimal) result[1];
-            revenueMap.put(date, totalRevenue);
+
+            // Nếu đã có doanh thu cho ngày này, cộng thêm vào, nếu chưa thì gán giá trị ban đầu
+            revenueMap.put(date, revenueMap.getOrDefault(date, BigDecimal.ZERO).add(totalRevenue));
         }
 
         List<DailyRevenueDTO> result = new ArrayList<>();
@@ -279,14 +285,18 @@ public class AdminServiceImpl implements AdminService {
 
         BigDecimal previousDayRevenue = BigDecimal.ZERO;
 
-        for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
+        // Lặp qua các ngày từ startDate đến endDate
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
             BigDecimal totalRevenue = revenueMap.getOrDefault(date, BigDecimal.ZERO);
+
+            // Tính phần trăm tăng trưởng doanh thu so với ngày hôm trước
             double percentageGrowth = calculatePercentageGrowth(previousDayRevenue.doubleValue(), totalRevenue.doubleValue());
 
+            // Thêm kết quả vào danh sách
             result.add(DailyRevenueDTO.builder()
                     .date(date)
-                    .totalRevenue(totalRevenue.doubleValue())
-                    .percentageGrowth(percentageGrowth)
+                    .totalRevenue(totalRevenue.doubleValue())  // Tổng doanh thu của ngày này
+                    .percentageGrowth(percentageGrowth)         // Phần trăm tăng trưởng
                     .build());
 
             previousDayRevenue = totalRevenue;

@@ -15,6 +15,6 @@ public interface OrdersService {
     void delete(Long id);
     OrdersDTO findById(Long id);
     List<OrdersDTO> findAll();
-
+    List<OrdersDTO> findOrdersByUser(User user);
 
 }

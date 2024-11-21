@@ -41,14 +41,14 @@ public class ReviewController {
         );
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
-        ReviewDTO reviewDTO = reviewService.findById(id)
-                ;
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "Find Success", reviewDTO)
-        );
-    }
+//    @GetMapping("/{id}")
+//    ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
+//        ReviewDTO reviewDTO = reviewService.findById(id)
+//                ;
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                new ResponseObject(true, 200, "Find Success", reviewDTO)
+//        );
+//    }
 
     @GetMapping("any/review/food/{foodId}")
     ResponseEntity<ResponseObject> findAllByFoodId(@PathVariable Long foodId) {

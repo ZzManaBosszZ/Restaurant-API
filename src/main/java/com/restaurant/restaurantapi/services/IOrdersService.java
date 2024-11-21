@@ -1,9 +1,8 @@
 package com.restaurant.restaurantapi.services;
-
-
 import com.restaurant.restaurantapi.dtos.cart.CartDTO;
-import com.restaurant.restaurantapi.entities.*;
+import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
+import com.restaurant.restaurantapi.entities.*;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.mappers.OrdersMapper;
 import com.restaurant.restaurantapi.models.food.FoodQuantity;
@@ -202,7 +201,6 @@ public class IOrdersService implements OrdersService {
     @Override
     public OrdersDTO findById(Long id) {
         Orders order = ordersRepository.findById(id)
-
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         return ordersMapper.toOrdersDTO(order);
     }
@@ -215,9 +213,16 @@ public class IOrdersService implements OrdersService {
     }
 
     @Override
+    public List<OrdersDTO> findOrdersByUser(User user) {
+        List<Orders> orders = ordersRepository.findAllByUser(user);
+        return orders.stream()
+                .map(ordersMapper::toOrdersDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void delete(Long id) {
         Orders order = ordersRepository.findById(id)
-
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         ordersRepository.delete(order);
     }

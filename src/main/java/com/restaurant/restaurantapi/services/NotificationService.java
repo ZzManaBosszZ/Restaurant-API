@@ -27,6 +27,7 @@ public class NotificationService implements INotificationService {
         Notification notification = new Notification();
         notification.setMessage(message);
         notification.setTimestamp(LocalDateTime.now());
+//        notification.getCreatedBy();
         notificationRepository.save(notification);
     }
 

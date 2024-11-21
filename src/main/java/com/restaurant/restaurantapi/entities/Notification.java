@@ -1,7 +1,6 @@
 package com.restaurant.restaurantapi.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,10 +13,13 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "notifications")
 @SuperBuilder
-public class Notification extends BaseEntity{
+public class Notification{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String message;
     private LocalDateTime timestamp;
@@ -34,4 +36,3 @@ public class Notification extends BaseEntity{
         this.isRead = read;
     }
 }
-

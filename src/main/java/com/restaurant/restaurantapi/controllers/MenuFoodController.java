@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/menu-food")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class MenuFoodController {
 
     private final MenuFoodService menuFoodService;
 
-    @PostMapping
+    @PostMapping("/menu-food")
     public ResponseEntity<ResponseObject> createMenuFood(@RequestBody CreateMenuFood createMenuFood) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
@@ -45,7 +45,7 @@ public class MenuFoodController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/menu-food/{id}")
     public ResponseEntity<ResponseObject> updateMenuFood(@PathVariable Long id, @RequestBody EditMenuFood editMenuFood) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
@@ -67,7 +67,7 @@ public class MenuFoodController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/menu-food/{id}")
     public ResponseEntity<ResponseObject> deleteMenuFood(@PathVariable Long id) {
         try {
             menuFoodService.delete(new Long[]{id});
@@ -79,7 +79,7 @@ public class MenuFoodController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/menu-food/{id}")
     public ResponseEntity<ResponseObject> findMenuFoodById(@PathVariable Long id) {
         try {
             MenuFoodDTO menuFoodDTO = menuFoodService.findById(id);
@@ -93,7 +93,7 @@ public class MenuFoodController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/any/menu-food")
     public ResponseEntity<ResponseObject> findAllMenuFoods() {
         List<MenuFoodDTO> menuFoodDTOs = menuFoodService.findAll();
         return ResponseEntity.ok(
