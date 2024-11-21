@@ -17,30 +17,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/review")
+@RequestMapping("/api/v1/")
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @PostMapping
+    @PostMapping("review")
     ResponseEntity<ResponseObject> create(@Valid @RequestBody CreateReview createReview) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
-        ReviewDTO reviewDTO = reviewService.create(createReview, currentUser.getId(), createReview.getFoodId());
+        ReviewDTO reviewDTO = reviewService.create(createReview, currentUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "Create Success", reviewDTO)
         );
     }
 
-//    @PutMapping
-//    ResponseEntity<ResponseObject> update(@Valid @RequestBody EditReview editReview) {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        User currentUser = (User) auth.getPrincipal();
-//        ReviewDTO reviewDTO = reviewService.update(editReview, currentUser.getId());
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                new ResponseObject(true, 200, "Update Success", reviewDTO)
-//        );
-//    }
 
     @DeleteMapping
     ResponseEntity<ResponseObject> delete(@RequestBody Long[] ids) {
@@ -50,15 +41,16 @@ public class ReviewController {
         );
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
-        ReviewDTO reviewDTO = reviewService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "Find Success", reviewDTO)
-        );
-    }
+//    @GetMapping("/{id}")
+//    ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
+//        ReviewDTO reviewDTO = reviewService.findById(id)
+//                ;
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                new ResponseObject(true, 200, "Find Success", reviewDTO)
+//        );
+//    }
 
-    @GetMapping("/food/{foodId}")
+    @GetMapping("any/review/food/{foodId}")
     ResponseEntity<ResponseObject> findAllByFoodId(@PathVariable Long foodId) {
         List<ReviewDTO> reviews = reviewService.findAllByFoodId(foodId);
         return ResponseEntity.status(HttpStatus.OK).body(

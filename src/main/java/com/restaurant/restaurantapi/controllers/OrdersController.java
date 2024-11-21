@@ -39,6 +39,16 @@ public class OrdersController {
         );
     }
 
+    @GetMapping("/history")
+    public ResponseEntity<ResponseObject> getOrderHistory() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        List<OrdersDTO> orderHistory = ordersService.findOrdersByUser(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", orderHistory)
+        );
+    }
+
     @PostMapping("/orders")
     public ResponseEntity<ResponseObject> create(@Valid @RequestBody CreateOrders createOrders) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

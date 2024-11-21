@@ -1,5 +1,6 @@
 package com.restaurant.restaurantapi.repositories;
 import com.restaurant.restaurantapi.entities.Orders;
+import com.restaurant.restaurantapi.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -57,4 +58,7 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
     List<Object[]> getDailyRevenue(@Param("startDate") Timestamp startDate);
 
     List<Orders> findByUserId(Long userId);
+
+    List<Orders> findAllByUser(User user);
+
 }

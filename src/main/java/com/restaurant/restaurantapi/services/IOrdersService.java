@@ -1,7 +1,8 @@
 package com.restaurant.restaurantapi.services;
 import com.restaurant.restaurantapi.dtos.cart.CartDTO;
-import com.restaurant.restaurantapi.entities.*;
+import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
+import com.restaurant.restaurantapi.entities.*;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.mappers.OrdersMapper;
 import com.restaurant.restaurantapi.models.food.FoodQuantity;
@@ -196,7 +197,7 @@ public class IOrdersService implements OrdersService {
 //
 //        return ordersMapper.toOrdersDTO(savedOrder);
 //    }
-  
+
     @Override
     public OrdersDTO findById(Long id) {
         Orders order = ordersRepository.findById(id)
@@ -207,6 +208,14 @@ public class IOrdersService implements OrdersService {
     @Override
     public List<OrdersDTO> findAll() {
         return ordersRepository.findAll().stream()
+                .map(ordersMapper::toOrdersDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrdersDTO> findOrdersByUser(User user) {
+        List<Orders> orders = ordersRepository.findAllByUser(user);
+        return orders.stream()
                 .map(ordersMapper::toOrdersDTO)
                 .collect(Collectors.toList());
     }
