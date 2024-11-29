@@ -32,7 +32,30 @@ public class IOrderTableService implements OrderTableService {
     private final OrderTableRepository orderTableRepository;
     private final MenuRepository menuRepository;
     private final OrderTableMapper orderTableMapper;
+    private final INotificationService notificationService;
     private final MailService mailService;
+//    @Override
+//    public OrderTableDTO createOrderTable(CreateOrderTable createOrderTable) {
+//        Menu menu = menuRepository.findById(createOrderTable.getMenuId())
+//                .orElseThrow(() -> new AppException(ErrorCode.NOTFOUND));
+//        OrderTable orderTable = OrderTable.builder()
+//                .name(createOrderTable.getName())
+//                .numberOfPerson(createOrderTable.getNumberOfPerson())
+//                .email(createOrderTable.getEmail())
+//                .phone(createOrderTable.getPhone())
+//                .status(OrderStatus.pending)
+//                .time(createOrderTable.getTime())
+//                .date(createOrderTable.getDate())
+//                .menu(menu)
+//                .build();
+//        OrderTableDTO orderTableDTO = orderTableMapper.toOrderTableDTO(orderTableRepository.save(orderTable));
+//        MailStructure mailStructure = new MailStructure();
+//        mailStructure.setSubject("Order Table Created");
+//        mailStructure.setMessage("Your order has been created successfully. Order details: \nName: " + orderTable.getName() +
+//                "\nDate: " + orderTable.getDate() + "\nTime: " + orderTable.getTime());
+//        mailService.sendMail(orderTable.getEmail(), mailStructure);
+//        return orderTableDTO;
+//    }
 
     @Override
     public OrderTableDTO createOrderTable(CreateOrderTable createOrderTable) {

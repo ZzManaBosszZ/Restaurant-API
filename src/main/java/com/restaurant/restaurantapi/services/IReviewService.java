@@ -49,9 +49,11 @@ public class IReviewService implements ReviewService {
     @Override
     public void delete(Long[] ids) {
         for (Long id : ids) {
-            Optional<Review> reviewOptional = reviewRepository.findById(id);
+            Optional<Review> reviewOptional = reviewRepository.findById(id)
+                    ;
             if (reviewOptional.isPresent()) {
-                reviewRepository.deleteById(id);
+                reviewRepository.deleteById(id)
+                ;
             } else {
                 throw new AppException(ErrorCode.REVIEW_NOT_FOUND);
             }
@@ -61,6 +63,7 @@ public class IReviewService implements ReviewService {
     @Override
     public ReviewDTO findById(Long id) {
         Review review = reviewRepository.findById(id)
+
                 .orElseThrow(() -> new AppException(ErrorCode.REVIEW_NOT_FOUND));
         return reviewMapper.toReviewDTO(review);
     }

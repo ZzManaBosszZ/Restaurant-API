@@ -10,11 +10,15 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "ordertable")
 @SuperBuilder
-public class OrderTable extends BaseEntity {
+public class OrderTable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "name", length = 255)
     private String name;
 
@@ -40,9 +44,13 @@ public class OrderTable extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")
     private Menu menu;
+<<<<<<< HEAD
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id")
 //    private User user;
 
 }
+=======
+}
+>>>>>>> main

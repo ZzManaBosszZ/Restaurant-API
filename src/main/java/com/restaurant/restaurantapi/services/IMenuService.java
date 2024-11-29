@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -23,8 +24,9 @@ public class IMenuService implements MenuService {
     private final MenuRepository menuRepository;
     private final MenuMapper menuMapper;
     private final StorageService storageService;
+
     @Override
-    public MenuDTO create(CreateMenu createMenu , User user) throws AppException {
+    public MenuDTO create(CreateMenu createMenu,  User user) {
         String generatedFileName = storageService.storeFile(createMenu.getImage());
         Menu menu = Menu.builder()
                 .name(createMenu.getName())
@@ -32,6 +34,7 @@ public class IMenuService implements MenuService {
                 .description(createMenu.getDescription())
 
                 .createdBy(user.getUsername())
+                .menuFoods(new ArrayList<>())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedBy(user.getUsername())
                 .modifiedDate(new Timestamp(System.currentTimeMillis()))
@@ -43,7 +46,7 @@ public class IMenuService implements MenuService {
     @Override
     public MenuDTO update(EditMenu editMenu, User user) throws AppException {
         Menu menu = menuRepository.findById(editMenu.getId())
-         .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
         String imageUrl = menu.getImage();
         if (editMenu.getImage() != null && !editMenu.getImage().isEmpty()) {
             try {
@@ -65,12 +68,20 @@ public class IMenuService implements MenuService {
 
     @Override
     public void delete(Long[] ids) {
-        menuRepository.deleteAllById(List.of(ids));
+        for (Long id : ids) {
+            if (menuRepository.existsById(id)) {
+                menuRepository.deleteById(id)
+                ;
+            } else {
+                throw new AppException(ErrorCode.FOOD_NOTFOUND);
+            }
+        }
     }
 
     @Override
     public MenuDTO findById(Long id) {
         Menu menu = menuRepository.findById(id)
+
                 .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
         return menuMapper.toMenuDTO(menu);
     }

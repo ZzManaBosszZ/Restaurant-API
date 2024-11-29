@@ -39,6 +39,7 @@ public class OrdersController {
         );
     }
 
+<<<<<<< HEAD
 //    @PostMapping("/orders")
 //    public ResponseEntity<ResponseObject> create(HttpSession  session) throws  Exception {
 //        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -53,6 +54,32 @@ public class OrdersController {
 //                new ResponseObject(true, 201, "Create Success", ordersDTO)
 //        );
 //    }
+=======
+    @GetMapping("/history")
+    public ResponseEntity<ResponseObject> getOrderHistory() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        List<OrdersDTO> orderHistory = ordersService.findOrdersByUser(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", orderHistory)
+        );
+    }
+
+    @PostMapping("/orders")
+    public ResponseEntity<ResponseObject> create(@Valid @RequestBody CreateOrders createOrders) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        if (currentUser == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    new ResponseObject(false, 401, "User not authenticated", null)
+            );
+        }
+        OrdersDTO ordersDTO = ordersService.create(createOrders, currentUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new ResponseObject(true, 201, "Create Success", ordersDTO)
+        );
+    }
+>>>>>>> main
     @DeleteMapping("/orders/{id}")
     public ResponseEntity<ResponseObject> delete(@PathVariable("id") Long id) {        ordersService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(

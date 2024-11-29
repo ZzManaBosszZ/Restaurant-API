@@ -107,4 +107,24 @@ public class AdminController {
         );
     }
 
+    @GetMapping("all-user")
+    public ResponseEntity<ResponseObject> getAllUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currenUser = (User) auth.getPrincipal();
+        List<UserDTO> userDTOS = adminService.getUser(currenUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok" , userDTOS)
+        );
+    }
+
+    @GetMapping("user-orders/{userId}")
+    public ResponseEntity<ResponseObject> getUserOrders(@PathVariable Long userId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currenUser = (User) auth.getPrincipal();
+        UserOrdersResponseDTO userOrders = adminService.getOrdersByUser(userId,currenUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", userOrders)
+        );
+    }
+
 }

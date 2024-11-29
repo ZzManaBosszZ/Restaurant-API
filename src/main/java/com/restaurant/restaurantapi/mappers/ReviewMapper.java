@@ -1,5 +1,6 @@
 package com.restaurant.restaurantapi.mappers;
 
+import com.restaurant.restaurantapi.dtos.UserDTO;
 import com.restaurant.restaurantapi.dtos.review.ReviewDTO;
 import com.restaurant.restaurantapi.entities.Review;
 import org.springframework.stereotype.Component;
@@ -7,6 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReviewMapper {
     private final UserMapper userMapper;
+
+    public ReviewMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     public ReviewMapper(UserMapper userMapper) {
         this.userMapper = userMapper;
@@ -27,7 +32,7 @@ public class ReviewMapper {
                 .createdDate(review.getCreatedDate())
                 .modifiedBy(review.getModifiedBy())
                 .modifiedDate(review.getModifiedDate())
-                .userDTO(userMapper.toUserSummaryDTO(review.getUser()))
+                .user(userMapper.toUserSummaryDTO(review.getUser()))
                 .build();
     }
 

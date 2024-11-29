@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/review")
+@RequestMapping("/api/v1/")
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @PostMapping
+    @PostMapping("review")
     ResponseEntity<ResponseObject> create(@Valid @RequestBody CreateReview createReview) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
@@ -41,15 +41,16 @@ public class ReviewController {
         );
     }
 
-    @GetMapping("/{id}")
-    ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
-        ReviewDTO reviewDTO = reviewService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "Find Success", reviewDTO)
-        );
-    }
+//    @GetMapping("/{id}")
+//    ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
+//        ReviewDTO reviewDTO = reviewService.findById(id)
+//                ;
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                new ResponseObject(true, 200, "Find Success", reviewDTO)
+//        );
+//    }
 
-    @GetMapping("/food/{foodId}")
+    @GetMapping("any/review/food/{foodId}")
     ResponseEntity<ResponseObject> findAllByFoodId(@PathVariable Long foodId) {
         List<ReviewDTO> reviews = reviewService.findAllByFoodId(foodId);
         return ResponseEntity.status(HttpStatus.OK).body(

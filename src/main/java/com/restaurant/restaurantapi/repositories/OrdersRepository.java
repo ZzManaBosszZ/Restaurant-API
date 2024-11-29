@@ -52,13 +52,13 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
     @Query(value = "SELECT cos.createdDate AS date, " +
             "SUM(cos.total) AS totalRevenue " +
             "FROM Orders cos " +
-            "WHERE cos.createdDate >= :startDate " +
+            "WHERE cos.createdDate >= :startDate AND cos.status = 'paid' "  +
             "GROUP BY cos.createdDate " +
             "ORDER BY cos.createdDate", nativeQuery = true)
     List<Object[]> getDailyRevenue(@Param("startDate") Timestamp startDate);
 
-
     List<Orders> findByUserId(Long userId);
+
     List<Orders> findAllByUser(User user);
 
 }

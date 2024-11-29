@@ -10,14 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/notifications")
 @RequiredArgsConstructor
 public class NotificationController {
     private final INotificationService notificationService;
@@ -29,5 +27,15 @@ public class NotificationController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", notifications)
         );
+    }
+
+    @PostMapping("/markAsRead/{id}")
+    public ResponseEntity<String> markAsRead(@PathVariable Long id) {
+        boolean isUpdated = notificationService.markAsRead(id);
+        if (isUpdated) {
+            return ResponseEntity.ok("Notification marked as read");
+        } else {
+            return ResponseEntity.badRequest().body("Notification not found or already read");
+        }
     }
 }

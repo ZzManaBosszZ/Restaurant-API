@@ -6,6 +6,8 @@ import com.restaurant.restaurantapi.dtos.menuadmin.MenuItem;
 import com.restaurant.restaurantapi.dtos.orders.*;
 import com.restaurant.restaurantapi.entities.*;
 import com.restaurant.restaurantapi.mappers.UserMapper;
+import com.restaurant.restaurantapi.repositories.FoodOrderDetailRepository;
+import com.restaurant.restaurantapi.repositories.MenuRepository;
 import com.restaurant.restaurantapi.repositories.OrdersRepository;
 import com.restaurant.restaurantapi.repositories.UserRepository;
 import com.restaurant.restaurantapi.services.impl.AdminService;
@@ -15,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -28,8 +31,9 @@ import java.util.stream.Collectors;
 public class AdminServiceImpl implements AdminService {
 
     private final OrdersRepository ordersRepository;
-    private final UserRepository  userRepository;
-    private  final UserMapper userMapper;
+    private final FoodOrderDetailRepository foodOrderDetailRepository;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
     public List<Menu> getMenu(User currenUser) {
@@ -144,32 +148,32 @@ public class AdminServiceImpl implements AdminService {
 
 
 
-@Override
-public List<TotalRevenueDTO> getTotalMonthlyRevenueLast12Months(User currentUser) {
-    LocalDate now = LocalDate.now();
-    LocalDate startDate = now.minusMonths(12).withDayOfMonth(1);
-    Timestamp startTimestamp = Timestamp.valueOf(startDate.atStartOfDay());
+    @Override
+    public List<TotalRevenueDTO> getTotalMonthlyRevenueLast12Months(User currentUser) {
+        LocalDate now = LocalDate.now();
+        LocalDate startDate = now.minusMonths(12).withDayOfMonth(1);
+        Timestamp startTimestamp = Timestamp.valueOf(startDate.atStartOfDay());
 
-    List<Object[]> revenueData = ordersRepository.getMonthlyRevenueLast12Months(startTimestamp);
-    Map<YearMonth, BigDecimal> revenueMap = new HashMap<>();
+        List<Object[]> revenueData = ordersRepository.getMonthlyRevenueLast12Months(startTimestamp);
+        Map<YearMonth, BigDecimal> revenueMap = new HashMap<>();
 
-    for (Object[] result : revenueData) {
-        Integer year = (Integer) result[0];
-        Integer month = (Integer) result[1];
-        BigDecimal totalRevenue = (BigDecimal) result[2]; // Sử dụng BigDecimal
-        YearMonth yearMonth = YearMonth.of(year, month);
-        revenueMap.put(yearMonth, totalRevenue);
+        for (Object[] result : revenueData) {
+            Integer year = (Integer) result[0];
+            Integer month = (Integer) result[1];
+            BigDecimal totalRevenue = (BigDecimal) result[2]; // Sử dụng BigDecimal
+            YearMonth yearMonth = YearMonth.of(year, month);
+            revenueMap.put(yearMonth, totalRevenue);
+        }
+
+        List<TotalRevenueDTO> result = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            YearMonth yearMonth = YearMonth.now().minusMonths(i);
+            BigDecimal totalRevenue = revenueMap.getOrDefault(yearMonth, BigDecimal.ZERO); // Sử dụng BigDecimal.ZERO
+            result.add(new TotalRevenueDTO(yearMonth.getYear(), yearMonth.getMonthValue(), totalRevenue));
+        }
+
+        return result;
     }
-
-    List<TotalRevenueDTO> result = new ArrayList<>();
-    for (int i = 0; i < 12; i++) {
-        YearMonth yearMonth = YearMonth.now().minusMonths(i);
-        BigDecimal totalRevenue = revenueMap.getOrDefault(yearMonth, BigDecimal.ZERO); // Sử dụng BigDecimal.ZERO
-        result.add(new TotalRevenueDTO(yearMonth.getYear(), yearMonth.getMonthValue(), totalRevenue));
-    }
-
-    return result;
-}
 
     @Override
     public List<DeliveredOrderDTO> getDeliveredOrdersRevenueLast12Months(User currentUser) {
@@ -255,43 +259,6 @@ public List<TotalRevenueDTO> getTotalMonthlyRevenueLast12Months(User currentUser
         return result;
     }
 
-//    @Override
-//    public List<DailyRevenueDTO> getDailyRevenue(User currentUser) {
-//        LocalDate now = LocalDate.now();
-//        LocalDate startDate = now.minusMonths(12).withDayOfMonth(1);
-//        Timestamp startTimestamp = Timestamp.valueOf(startDate.atStartOfDay());
-//
-//        List<Object[]> dailyRevenueData = ordersRepository.getDailyRevenue(startTimestamp);
-//        Map<LocalDate, BigDecimal> revenueMap = new HashMap<>();
-//
-//        for (Object[] result : dailyRevenueData) {
-//            LocalDate date = ((Timestamp) result[0]).toLocalDateTime().toLocalDate();
-//            BigDecimal totalRevenue = (BigDecimal) result[1];
-//            revenueMap.put(date, totalRevenue);
-//        }
-//
-//        List<DailyRevenueDTO> result = new ArrayList<>();
-//        LocalDate endDate = LocalDate.now();
-//
-//        BigDecimal previousDayRevenue = BigDecimal.ZERO;
-//
-//        for (LocalDate date = startDate; date.isBefore(endDate) || date.isEqual(endDate); date = date.plusDays(1)) {
-//            BigDecimal totalRevenue = revenueMap.getOrDefault(date, BigDecimal.ZERO);
-//            double percentageGrowth = calculatePercentageGrowth(previousDayRevenue.doubleValue(), totalRevenue.doubleValue());
-//
-//            result.add(DailyRevenueDTO.builder()
-//                    .date(date)
-//                    .totalRevenue(totalRevenue.doubleValue())
-//                    .percentageGrowth(percentageGrowth)
-//                    .build());
-//
-//            previousDayRevenue = totalRevenue;
-//        }
-//
-//        return result;
-//    }
-
-
     @Override
     public List<DailyRevenueDTO> getDailyRevenue(User currentUser) {
         LocalDate now = LocalDate.now();
@@ -338,12 +305,18 @@ public List<TotalRevenueDTO> getTotalMonthlyRevenueLast12Months(User currentUser
         return result;
     }
 
+    private double calculatePercentageGrowth(double oldValue, double newValue) {
+        if (oldValue == 0) return 0.0;
+        return ((newValue - oldValue) / oldValue) * 100;
+    }
+
     @Override
     public List<UserDTO> getUser(User currenUser) {
         return userRepository.findAll().stream()
                 .map(userMapper::toUserSummaryDTO)
                 .toList();
     }
+
     @Override
     public UserOrdersResponseDTO getOrdersByUser(Long userId, User currentUser) {
         User user = userRepository.findById(userId)
@@ -367,11 +340,6 @@ public List<TotalRevenueDTO> getTotalMonthlyRevenueLast12Months(User currentUser
                 .user(userMapper.toUserSummaryDTO(user))
                 .orders(orders)
                 .build();
-    }
-
-    private double calculatePercentageGrowth(double oldValue, double newValue) {
-        if (oldValue == 0) return 0.0;
-        return ((newValue - oldValue) / oldValue) * 100;
     }
 
 }

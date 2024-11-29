@@ -1,7 +1,8 @@
 package com.restaurant.restaurantapi.services;
 import com.restaurant.restaurantapi.dtos.cart.CartDTO;
-import com.restaurant.restaurantapi.entities.*;
+import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
+import com.restaurant.restaurantapi.entities.*;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.mappers.OrdersMapper;
 import com.restaurant.restaurantapi.models.food.FoodQuantity;
@@ -26,92 +27,98 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-    public class IOrdersService implements OrdersService {
+public class IOrdersService implements OrdersService {
 
     private final OrdersRepository ordersRepository;
     private final OrdersMapper ordersMapper;
     private final FoodRepository foodRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final FoodOrderDetailRepository foodOrderDetailRepository;
-    private final CartServiceImpl cartService;
+//    private final CartServiceImpl cartService;
 
 
     private String generateOrderCode() {
         return UUID.randomUUID().toString();
     }
-//    @Transactional(rollbackFor = AppException.class)
-//    @Override
-//    public OrdersDTO create(CreateOrders createOrders, User user) throws AppException {
-//        String orderCode = generateOrderCode();
-//        Orders order = Orders.builder()
-//                .orderCode(orderCode)
-//                .total(BigDecimal.ZERO)
-//                .isPaid(false)
-//                .status(OrderStatus.pending)
-//                .user(user)
-//                .createdBy(user.getFullName())
-//                .modifiedBy(user.getFullName())
-//                .createdDate(new Timestamp(System.currentTimeMillis()))
-//                .modifiedDate(new Timestamp(System.currentTimeMillis()))
-//                .build();
-//
-//        // Create OrderDetail
-//        OrderDetail orderDetail = OrderDetail.builder()
-//                .order(order)
-//                .discount(createOrders.getDiscount())
-//                .createdDate(new Timestamp(System.currentTimeMillis()))
-//                .modifiedDate(new Timestamp(System.currentTimeMillis()))
-//                .createdBy(user.getFullName())
-//                .modifiedBy(user.getFullName())
-//                .user(user)
-//                .foodOrderDetails(new ArrayList<>())
-//                .build();
-//
-//        // Get food quantities from CreateOrders
-//        List<FoodQuantity> foodQuantities = createOrders.getFoodQuantities();
-//
-//        // Get food list from the database
-//        List<Food> foods = foodRepository.findAllById(
-//                foodQuantities.stream()
-//                        .map(FoodQuantity::getFoodId)
-//                        .collect(Collectors.toList())
-//        );
-//
-//        // Calculate total and create FoodOrderDetail
-//        BigDecimal total = BigDecimal.ZERO;
-//        List<FoodOrderDetail> foodOrderDetails = new ArrayList<>();
-//
-//        for (FoodQuantity foodQuantity : foodQuantities) {
-//            Food food = foods.stream()
-//                    .filter(f -> f.getId().equals(foodQuantity.getFoodId()))
-//                    .findFirst()
-//                    .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
-//
-//            BigDecimal unitPrice = BigDecimal.valueOf(food.getPrice());
-//            BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(foodQuantity.getQuantity()));
-//            total = total.add(itemTotal);
-//
-//            FoodOrderDetail foodOrderDetail = new FoodOrderDetail();
-//            foodOrderDetail.setOrderDetail(orderDetail);
-//            foodOrderDetail.setFood(food);
-//            foodOrderDetail.setQuantity(foodQuantity.getQuantity());
-//            foodOrderDetail.setUnitPrice(unitPrice);
-//            foodOrderDetail.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-//            foodOrderDetails.add(foodOrderDetail);
-//        }
-//
-//        // Set total price in Order
-//        order.setTotal(total);
-//
-//        // Save Order and FoodOrderDetail
-//        OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
-//        foodOrderDetailRepository.saveAll(foodOrderDetails);
-//
-//        order.setOrderDetail(savedOrderDetail);
-//        Orders savedOrder = ordersRepository.save(order);
-//
-//        return ordersMapper.toOrdersDTO(savedOrder);
-//    }
+    @Transactional(rollbackFor = AppException.class)
+    @Override
+    public OrdersDTO create(CreateOrders createOrders, User user) throws AppException {
+        String orderCode = generateOrderCode();
+        Orders order = Orders.builder()
+                .orderCode(orderCode)
+                .total(BigDecimal.ZERO)
+                .isPaid(false)
+                .status(OrderStatus.pending)
+                .user(user)
+                .paymentMethod(createOrders.getPaymentMethod())
+                .createdBy(user.getFullName())
+                .modifiedBy(user.getFullName())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .modifiedDate(new Timestamp(System.currentTimeMillis()))
+                .build();
+
+        // Create OrderDetail
+        OrderDetail orderDetail = OrderDetail.builder()
+                .order(order)
+                .discount(createOrders.getDiscount())
+                .createdDate(new Timestamp(System.currentTimeMillis()))
+                .modifiedDate(new Timestamp(System.currentTimeMillis()))
+                .createdBy(user.getFullName())
+                .modifiedBy(user.getFullName())
+                .user(user)
+                .foodOrderDetails(new ArrayList<>())
+                .build();
+
+        // Get food quantities from CreateOrders
+        List<FoodQuantity> foodQuantities = createOrders.getFoodQuantities();
+
+        // Get food list from the database
+        List<Food> foods = foodRepository.findAllById(
+                foodQuantities.stream()
+                        .map(FoodQuantity::getFoodId)
+                        .collect(Collectors.toList())
+        );
+
+        // Calculate total and create FoodOrderDetail
+        BigDecimal total = BigDecimal.ZERO;
+        List<FoodOrderDetail> foodOrderDetails = new ArrayList<>();
+
+        for (FoodQuantity foodQuantity : foodQuantities) {
+            Food food = foods.stream()
+                    .filter(f -> f.getId().equals(foodQuantity.getFoodId()))
+                    .findFirst()
+                    .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
+
+            BigDecimal unitPrice = BigDecimal.valueOf(food.getPrice());
+            BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(foodQuantity.getQuantity()));
+            total = total.add(itemTotal);
+
+            FoodOrderDetail foodOrderDetail = new FoodOrderDetail();
+            foodOrderDetail.setOrderDetail(orderDetail);
+            foodOrderDetail.setFood(food);
+            foodOrderDetail.setQuantity(foodQuantity.getQuantity());
+            foodOrderDetail.setUnitPrice(unitPrice);
+            foodOrderDetail.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+            foodOrderDetails.add(foodOrderDetail);
+        }
+
+        // Set total price in Order
+        order.setTotal(total);
+
+        if ("paypal".equalsIgnoreCase(createOrders.getPaymentMethod())) {
+//            order.IsPaid(true);
+            order.setStatus(OrderStatus.paid);
+        }
+
+        // Save Order and FoodOrderDetail
+        OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
+        foodOrderDetailRepository.saveAll(foodOrderDetails);
+
+        order.setOrderDetail(savedOrderDetail);
+        Orders savedOrder = ordersRepository.save(order);
+
+        return ordersMapper.toOrdersDTO(savedOrder);
+    }
 
 
 //    @Transactional(rollbackFor = AppException.class)
@@ -191,85 +198,6 @@ import java.util.stream.Collectors;
 //        return ordersMapper.toOrdersDTO(savedOrder);
 //    }
 
-    @Transactional(rollbackFor = AppException.class)
-    public OrdersDTO create(CreateOrders createOrders, User user) throws AppException {
-        String orderCode = generateOrderCode();
-        Orders order = Orders.builder()
-                .orderCode(orderCode)
-                .total(BigDecimal.ZERO)
-                .isPaid(false)
-                .status(OrderStatus.pending)
-                .user(user)
-//                .paymentMethod(createOrders.getPaymentMethod())
-                .createdBy(user.getFullName())
-                .modifiedBy(user.getFullName())
-                .createdDate(new Timestamp(System.currentTimeMillis()))
-                .modifiedDate(new Timestamp(System.currentTimeMillis()))
-                .build();
-
-        // Create OrderDetail
-        OrderDetail orderDetail = OrderDetail.builder()
-                .order(order)
-                .discount(createOrders.getDiscount())
-                .createdDate(new Timestamp(System.currentTimeMillis()))
-                .modifiedDate(new Timestamp(System.currentTimeMillis()))
-                .createdBy(user.getFullName())
-                .modifiedBy(user.getFullName())
-                .user(user)
-                .foodOrderDetails(new ArrayList<>())
-                .build();
-
-        // Get food quantities from CreateOrders
-        List<FoodQuantity> foodQuantities = createOrders.getFoodQuantities();
-
-        // Get food list from the database
-        List<Food> foods = foodRepository.findAllById(
-                foodQuantities.stream()
-                        .map(FoodQuantity::getFoodId)
-                        .collect(Collectors.toList())
-        );
-
-        // Calculate total and create FoodOrderDetail
-        BigDecimal total = BigDecimal.ZERO;
-        List<FoodOrderDetail> foodOrderDetails = new ArrayList<>();
-
-        for (FoodQuantity foodQuantity : foodQuantities) {
-            Food food = foods.stream()
-                    .filter(f -> f.getId().equals(foodQuantity.getFoodId()))
-                    .findFirst()
-                    .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
-
-            BigDecimal unitPrice = BigDecimal.valueOf(food.getPrice());
-            BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(foodQuantity.getQuantity()));
-            total = total.add(itemTotal);
-
-            FoodOrderDetail foodOrderDetail = new FoodOrderDetail();
-            foodOrderDetail.setOrderDetail(orderDetail);
-            foodOrderDetail.setFood(food);
-            foodOrderDetail.setQuantity(foodQuantity.getQuantity());
-            foodOrderDetail.setUnitPrice(unitPrice);
-            foodOrderDetail.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-            foodOrderDetails.add(foodOrderDetail);
-        }
-
-        // Set total price in Order
-        order.setTotal(total);
-//
-//        if ("paypal".equalsIgnoreCase(createOrders.getPaymentMethod())) {
-////            order.IsPaid(true);
-//            order.setStatus(OrderStatus.paid);
-//        }
-
-        // Save Order and FoodOrderDetail
-        OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
-        foodOrderDetailRepository.saveAll(foodOrderDetails);
-
-        order.setOrderDetail(savedOrderDetail);
-        Orders savedOrder = ordersRepository.save(order);
-
-        return ordersMapper.toOrdersDTO(savedOrder);
-    }
-
     @Override
     public OrdersDTO findById(Long id) {
         Orders order = ordersRepository.findById(id)
@@ -294,11 +222,17 @@ import java.util.stream.Collectors;
     }
 
     @Override
+    public List<OrdersDTO> findOrdersByUser(User user) {
+        List<Orders> orders = ordersRepository.findAllByUser(user);
+        return orders.stream()
+                .map(ordersMapper::toOrdersDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void delete(Long id) {
         Orders order = ordersRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         ordersRepository.delete(order);
     }
-
-
 }

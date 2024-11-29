@@ -10,4 +10,8 @@ public class CancelledOrderDTO {
     private int month;
     private long totalOrders;
     private double percentageGrowth;; // Phần trăm tăng trưởng
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> main

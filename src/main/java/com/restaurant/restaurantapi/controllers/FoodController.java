@@ -38,7 +38,7 @@ public class FoodController {
         );
     }
 
-    @GetMapping("/food/{id}")
+    @GetMapping("/any/food/{id}")
     public ResponseEntity<ResponseObject> getById(@PathVariable("id") Long id) {
         FoodDTO foodDTO = foodService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(
