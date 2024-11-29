@@ -3,6 +3,7 @@ package com.restaurant.restaurantapi.controllers;
 import com.restaurant.restaurantapi.dtos.ResponseObject;
 import com.restaurant.restaurantapi.dtos.orderdetail.OrderDetailDTO;
 import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
+import com.restaurant.restaurantapi.entities.OrderStatus;
 import com.restaurant.restaurantapi.models.orders.CreateOrders;
 import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.services.impl.OrdersService;
@@ -73,9 +74,20 @@ public class OrdersController {
         );
     }
     @DeleteMapping("/orders/{id}")
-    public ResponseEntity<ResponseObject> delete(@PathVariable("id") Long id) {        ordersService.delete(id);
+    public ResponseEntity<ResponseObject> delete(@PathVariable("id") Long id) {
+        ordersService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                 new ResponseObject(true, 204, "Delete Success", "")
+        );
+    }
+
+    @PatchMapping("/order/{id}/status")
+    public ResponseEntity<ResponseObject> updateOrderStatus(
+            @PathVariable("id") Long orderId,
+            @RequestParam("status") OrderStatus newStatus) {
+        ordersService.updateStatus(orderId, newStatus);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok","")
         );
     }
 
