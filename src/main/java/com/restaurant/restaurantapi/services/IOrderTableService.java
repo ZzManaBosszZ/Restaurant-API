@@ -32,7 +32,6 @@ public class IOrderTableService implements OrderTableService {
     private final OrderTableRepository orderTableRepository;
     private final MenuRepository menuRepository;
     private final OrderTableMapper orderTableMapper;
-    private final INotificationService notificationService;
     private final MailService mailService;
 //    @Override
 //    public OrderTableDTO createOrderTable(CreateOrderTable createOrderTable) {

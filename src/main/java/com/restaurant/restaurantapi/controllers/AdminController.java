@@ -106,24 +106,13 @@ public class AdminController {
                 new ResponseObject(true, 200, "ok", userOrders)
         );
     }
-
-    @GetMapping("all-user")
-    public ResponseEntity<ResponseObject> getAllUser() {
+    @GetMapping("/orders/ready-for-shipping")
+    public ResponseEntity<ResponseObject> getOrdersReadyForShipping() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currenUser = (User) auth.getPrincipal();
-        List<UserDTO> userDTOS = adminService.getUser(currenUser);
+        List<OrdersDTO> orders = adminService.getOrdersReadyForShipping(currenUser);
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok" , userDTOS)
-        );
-    }
-
-    @GetMapping("user-orders/{userId}")
-    public ResponseEntity<ResponseObject> getUserOrders(@PathVariable Long userId) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currenUser = (User) auth.getPrincipal();
-        UserOrdersResponseDTO userOrders = adminService.getOrdersByUser(userId,currenUser);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok", userOrders)
+                new ResponseObject(true, 200, "ok", orders)
         );
     }
 

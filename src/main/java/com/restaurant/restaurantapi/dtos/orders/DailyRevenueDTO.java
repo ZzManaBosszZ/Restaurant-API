@@ -11,8 +11,4 @@ public class DailyRevenueDTO {
     private LocalDate date;
     private double totalRevenue;
     private double percentageGrowth;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> main

@@ -1,4 +1,5 @@
 package com.restaurant.restaurantapi.repositories;
+import com.restaurant.restaurantapi.entities.OrderStatus;
 import com.restaurant.restaurantapi.entities.Orders;
 import com.restaurant.restaurantapi.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
 
     @Query(value = "SELECT YEAR(cos.createdDate) AS year, MONTH(cos.createdDate) AS month, SUM(cos.total) AS totalRevenue " +
             "FROM Orders cos " +
-            "WHERE cos.createdDate >= :startDate AND cos.status = 'paid' " +
+            "WHERE cos.createdDate >= :startDate AND cos.isPaid  = true "  +
             "GROUP BY YEAR(cos.createdDate), MONTH(cos.createdDate) " +
             "ORDER BY YEAR(cos.createdDate), MONTH(cos.createdDate)", nativeQuery = true)
     List<Object[]> getMonthlyRevenueLast12Months(@Param("startDate") Timestamp startDate);
@@ -52,7 +53,7 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
     @Query(value = "SELECT cos.createdDate AS date, " +
             "SUM(cos.total) AS totalRevenue " +
             "FROM Orders cos " +
-            "WHERE cos.createdDate >= :startDate AND cos.status = 'paid' "  +
+            "WHERE cos.createdDate >= :startDate AND  cos.isPaid  = true "  +
             "GROUP BY cos.createdDate " +
             "ORDER BY cos.createdDate", nativeQuery = true)
     List<Object[]> getDailyRevenue(@Param("startDate") Timestamp startDate);
@@ -60,5 +61,7 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
     List<Orders> findByUserId(Long userId);
 
     List<Orders> findAllByUser(User user);
+
+    List<Orders> findByStatus(OrderStatus status);
 
 }

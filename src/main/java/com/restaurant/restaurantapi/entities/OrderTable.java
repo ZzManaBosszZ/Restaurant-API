@@ -44,13 +44,10 @@ public class OrderTable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id")
     private Menu menu;
-<<<<<<< HEAD
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id")
 //    private User user;
 
 }
-=======
-}
->>>>>>> main
+

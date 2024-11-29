@@ -13,9 +13,6 @@ public class ReviewMapper {
         this.userMapper = userMapper;
     }
 
-    public ReviewMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
 
     public ReviewDTO toReviewDTO(Review review) {
         if (review == null) {

@@ -1,9 +1,11 @@
 package com.restaurant.restaurantapi.services;
 import com.restaurant.restaurantapi.dtos.cart.CartDTO;
+import com.restaurant.restaurantapi.dtos.orderdetail.OrderDetailDTO;
 import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
 import com.restaurant.restaurantapi.entities.*;
 import com.restaurant.restaurantapi.exceptions.AppException;
+import com.restaurant.restaurantapi.mappers.OrderDetailMapper;
 import com.restaurant.restaurantapi.mappers.OrdersMapper;
 import com.restaurant.restaurantapi.models.food.FoodQuantity;
 import com.restaurant.restaurantapi.models.orders.CreateOrders;
@@ -34,6 +36,7 @@ public class IOrdersService implements OrdersService {
     private final FoodRepository foodRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final FoodOrderDetailRepository foodOrderDetailRepository;
+    private final OrderDetailMapper orderDetailMapper;
 //    private final CartServiceImpl cartService;
 
 
@@ -106,8 +109,11 @@ public class IOrdersService implements OrdersService {
         order.setTotal(total);
 
         if ("paypal".equalsIgnoreCase(createOrders.getPaymentMethod())) {
-//            order.IsPaid(true);
-            order.setStatus(OrderStatus.paid);
+          order.setPaid(true);
+//            order.setStatus(OrderStatus.paid);
+        }
+        else if ("cod".equalsIgnoreCase(createOrders.getPaymentMethod())) {
+            order.setPaid(false);  // Thanh toán qua COD thì mặc định là chưa thanh toán
         }
 
         // Save Order and FoodOrderDetail
@@ -221,13 +227,6 @@ public class IOrdersService implements OrdersService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<OrdersDTO> findOrdersByUser(User user) {
-        List<Orders> orders = ordersRepository.findAllByUser(user);
-        return orders.stream()
-                .map(ordersMapper::toOrdersDTO)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public void delete(Long id) {
@@ -235,4 +234,51 @@ public class IOrdersService implements OrdersService {
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         ordersRepository.delete(order);
     }
+
+    @Transactional(rollbackFor = AppException.class)
+    @Override
+    public void updateStatus(Long orderId, OrderStatus newStatus) throws AppException {
+        Orders order = ordersRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        if (order.getStatus().equals(OrderStatus.completed) || order.getStatus().equals(OrderStatus.cancelled)) {
+            throw new AppException(ErrorCode.INVALID_ORDER_STATUS_CHANGE);
+        }
+
+        if (newStatus.equals(OrderStatus.completed)) {
+            if (!order.getStatus().equals(OrderStatus.process)) {
+                throw new AppException(ErrorCode.INVALID_ORDER_STATUS_CHANGE);
+            }
+            if ("cod".equalsIgnoreCase(order.getPaymentMethod())) {
+                order.setPaid(true);
+            }
+        }
+        if (newStatus.ordinal() < order.getStatus().ordinal()) {
+            throw new AppException(ErrorCode.INVALID_ORDER_STATUS_CHANGE);
+        }
+
+        order.setStatus(newStatus);
+        order.setModifiedDate(new Timestamp(System.currentTimeMillis()));
+        ordersRepository.save(order);
+    }
+
+
+
+
+    @Override
+    public OrderDetailDTO getOrderDetailByIdAndUser(Long orderId, User currentUser) {
+
+        Orders order = ordersRepository.findById(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+        if (!order.getUser().getId().equals(currentUser.getId())) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+        OrderDetail orderDetail = order.getOrderDetail();
+        if (orderDetail == null) {
+            throw new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND);
+        }
+        return orderDetailMapper.toOrderDetailDTO(orderDetail);
+    }
+
+
+
 }

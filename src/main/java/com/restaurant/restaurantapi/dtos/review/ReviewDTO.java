@@ -22,9 +22,5 @@ public class ReviewDTO {
     private Timestamp modifiedDate;
     private String createdBy;
     private String modifiedBy;
-<<<<<<< HEAD
-    private UserDTO userDTO;
-=======
     private UserDTO user;
->>>>>>> main
 }
