@@ -39,24 +39,33 @@ public class OrdersController {
         );
     }
 
-    @PostMapping("/orders")
-    public ResponseEntity<ResponseObject> create(HttpSession  session) throws  Exception {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) auth.getPrincipal();
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    new ResponseObject(false, 401, "User not authenticated", null)
-            );
-        }
-        OrdersDTO ordersDTO = ordersService.create(currentUser, session);
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                new ResponseObject(true, 201, "Create Success", ordersDTO)
-        );
-    }
+//    @PostMapping("/orders")
+//    public ResponseEntity<ResponseObject> create(HttpSession  session) throws  Exception {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        User currentUser = (User) auth.getPrincipal();
+//        if (currentUser == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+//                    new ResponseObject(false, 401, "User not authenticated", null)
+//            );
+//        }
+//        OrdersDTO ordersDTO = ordersService.create(currentUser, session);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(
+//                new ResponseObject(true, 201, "Create Success", ordersDTO)
+//        );
+//    }
     @DeleteMapping("/orders/{id}")
     public ResponseEntity<ResponseObject> delete(@PathVariable("id") Long id) {        ordersService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                 new ResponseObject(true, 204, "Delete Success", "")
+        );
+    }
+    @GetMapping("/history")
+    public ResponseEntity<ResponseObject> getOrderHistory() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        List<OrdersDTO> orderHistory = ordersService.findOrdersByUser(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", orderHistory)
         );
     }
 }

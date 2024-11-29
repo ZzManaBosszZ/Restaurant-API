@@ -30,6 +30,7 @@ public class IMenuService implements MenuService {
                 .name(createMenu.getName())
                 .image("http://localhost:8080/api/v1/FileUpload/files/" + generatedFileName)
                 .description(createMenu.getDescription())
+
                 .createdBy(user.getUsername())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedBy(user.getUsername())

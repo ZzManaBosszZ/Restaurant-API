@@ -6,6 +6,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ReviewMapper {
+    private final UserMapper userMapper;
+
+    public ReviewMapper(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     public ReviewDTO toReviewDTO(Review review) {
         if (review == null) {
@@ -22,6 +27,7 @@ public class ReviewMapper {
                 .createdDate(review.getCreatedDate())
                 .modifiedBy(review.getModifiedBy())
                 .modifiedDate(review.getModifiedDate())
+                .userDTO(userMapper.toUserSummaryDTO(review.getUser()))
                 .build();
     }
 

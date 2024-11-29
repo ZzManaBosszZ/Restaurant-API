@@ -5,6 +5,7 @@ import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
 import com.restaurant.restaurantapi.exceptions.AppException;
 import com.restaurant.restaurantapi.mappers.OrdersMapper;
 import com.restaurant.restaurantapi.models.food.FoodQuantity;
+import com.restaurant.restaurantapi.models.orders.CreateOrders;
 import com.restaurant.restaurantapi.repositories.FoodOrderDetailRepository;
 import com.restaurant.restaurantapi.repositories.FoodRepository;
 import com.restaurant.restaurantapi.repositories.OrderDetailRepository;
@@ -113,13 +114,85 @@ import java.util.stream.Collectors;
 //    }
 
 
+//    @Transactional(rollbackFor = AppException.class)
+//    @Override
+//    public OrdersDTO create(User user, HttpSession session) throws AppException {
+//        CartDTO cart = cartService.getCartByUser(user, session);
+//        if (cart == null || cart.getItems().isEmpty()) {
+//            throw new AppException(ErrorCode.CART_EMPTY);
+//        }
+//        String orderCode = generateOrderCode();
+//        Orders order = Orders.builder()
+//                .orderCode(orderCode)
+//                .total(BigDecimal.ZERO)
+//                .isPaid(false)
+//                .status(OrderStatus.pending)
+//                .user(user)
+//                .createdBy(user.getFullName())
+//                .modifiedBy(user.getFullName())
+//                .createdDate(new Timestamp(System.currentTimeMillis()))
+//                .modifiedDate(new Timestamp(System.currentTimeMillis()))
+//                .build();
+//        OrderDetail orderDetail = OrderDetail.builder()
+//                .order(order)
+//                .discount(BigDecimal.ZERO)
+//                .createdDate(new Timestamp(System.currentTimeMillis()))
+//                .modifiedDate(new Timestamp(System.currentTimeMillis()))
+//                .createdBy(user.getFullName())
+//                .modifiedBy(user.getFullName())
+//                .user(user)
+//                .foodOrderDetails(new ArrayList<>())
+//                .build();
+//        List<FoodQuantity> foodQuantities = cart.getItems().stream()
+//                .map(item -> {
+//                    FoodQuantity foodQuantity = new FoodQuantity();
+//                    foodQuantity.setFoodId(item.getFoodId());
+//                   foodQuantity.setQuantity(item.getQuantity());
+//                   return foodQuantity;
+//                }).toList();
+//        // Lấy danh sách thực phẩm từ cơ sở dữ liệu
+//        List<Food> foods = foodRepository.findAllById(
+//                foodQuantities.stream()
+//                        .map(FoodQuantity::getFoodId)
+//                        .collect(Collectors.toList())
+//        );
+//
+//        // Tính tổng và tạo FoodOrderDetail
+//        BigDecimal total = BigDecimal.ZERO;
+//        List<FoodOrderDetail> foodOrderDetails = new ArrayList<>();
+//
+//        for (FoodQuantity foodQuantity : foodQuantities) {
+//            Food food = foods.stream()
+//                    .filter(f -> f.getId().equals(foodQuantity.getFoodId()))
+//                    .findFirst()
+//                    .orElseThrow(() -> new AppException(ErrorCode.FOOD_NOTFOUND));
+//
+//            BigDecimal unitPrice = BigDecimal.valueOf(food.getPrice());
+//            BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(foodQuantity.getQuantity()));
+//            total = total.add(itemTotal);
+//            FoodOrderDetail foodOrderDetail = new FoodOrderDetail();
+//            foodOrderDetail.setOrderDetail(orderDetail);
+//            foodOrderDetail.setFood(food);
+//            foodOrderDetail.setQuantity(foodQuantity.getQuantity());
+//            foodOrderDetail.setUnitPrice(unitPrice);
+//            foodOrderDetail.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+//            foodOrderDetails.add(foodOrderDetail);
+//        }
+//        order.setTotal(total);
+//        OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
+//        foodOrderDetailRepository.saveAll(foodOrderDetails);
+//
+//        order.setOrderDetail(savedOrderDetail);
+//        Orders savedOrder = ordersRepository.save(order);
+//
+//        // Xóa giỏ hàng sau khi tạo đơn hàng
+//        cartService.clearCart(user, session);
+//
+//        return ordersMapper.toOrdersDTO(savedOrder);
+//    }
+
     @Transactional(rollbackFor = AppException.class)
-    @Override
-    public OrdersDTO create(User user, HttpSession session) throws AppException {
-        CartDTO cart = cartService.getCartByUser(user, session);
-        if (cart == null || cart.getItems().isEmpty()) {
-            throw new AppException(ErrorCode.CART_EMPTY);
-        }
+    public OrdersDTO create(CreateOrders createOrders, User user) throws AppException {
         String orderCode = generateOrderCode();
         Orders order = Orders.builder()
                 .orderCode(orderCode)
@@ -127,14 +200,17 @@ import java.util.stream.Collectors;
                 .isPaid(false)
                 .status(OrderStatus.pending)
                 .user(user)
+//                .paymentMethod(createOrders.getPaymentMethod())
                 .createdBy(user.getFullName())
                 .modifiedBy(user.getFullName())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .build();
+
+        // Create OrderDetail
         OrderDetail orderDetail = OrderDetail.builder()
                 .order(order)
-                .discount(BigDecimal.ZERO)
+                .discount(createOrders.getDiscount())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
                 .modifiedDate(new Timestamp(System.currentTimeMillis()))
                 .createdBy(user.getFullName())
@@ -142,21 +218,18 @@ import java.util.stream.Collectors;
                 .user(user)
                 .foodOrderDetails(new ArrayList<>())
                 .build();
-        List<FoodQuantity> foodQuantities = cart.getItems().stream()
-                .map(item -> {
-                    FoodQuantity foodQuantity = new FoodQuantity();
-                    foodQuantity.setFoodId(item.getFoodId());
-                   foodQuantity.setQuantity(item.getQuantity());
-                   return foodQuantity;
-                }).toList();
-        // Lấy danh sách thực phẩm từ cơ sở dữ liệu
+
+        // Get food quantities from CreateOrders
+        List<FoodQuantity> foodQuantities = createOrders.getFoodQuantities();
+
+        // Get food list from the database
         List<Food> foods = foodRepository.findAllById(
                 foodQuantities.stream()
                         .map(FoodQuantity::getFoodId)
                         .collect(Collectors.toList())
         );
 
-        // Tính tổng và tạo FoodOrderDetail
+        // Calculate total and create FoodOrderDetail
         BigDecimal total = BigDecimal.ZERO;
         List<FoodOrderDetail> foodOrderDetails = new ArrayList<>();
 
@@ -169,6 +242,7 @@ import java.util.stream.Collectors;
             BigDecimal unitPrice = BigDecimal.valueOf(food.getPrice());
             BigDecimal itemTotal = unitPrice.multiply(BigDecimal.valueOf(foodQuantity.getQuantity()));
             total = total.add(itemTotal);
+
             FoodOrderDetail foodOrderDetail = new FoodOrderDetail();
             foodOrderDetail.setOrderDetail(orderDetail);
             foodOrderDetail.setFood(food);
@@ -177,19 +251,24 @@ import java.util.stream.Collectors;
             foodOrderDetail.setCreatedDate(new Timestamp(System.currentTimeMillis()));
             foodOrderDetails.add(foodOrderDetail);
         }
+
+        // Set total price in Order
         order.setTotal(total);
+//
+//        if ("paypal".equalsIgnoreCase(createOrders.getPaymentMethod())) {
+////            order.IsPaid(true);
+//            order.setStatus(OrderStatus.paid);
+//        }
+
+        // Save Order and FoodOrderDetail
         OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
         foodOrderDetailRepository.saveAll(foodOrderDetails);
 
         order.setOrderDetail(savedOrderDetail);
         Orders savedOrder = ordersRepository.save(order);
 
-        // Xóa giỏ hàng sau khi tạo đơn hàng
-        cartService.clearCart(user, session);
-
         return ordersMapper.toOrdersDTO(savedOrder);
     }
-
 
     @Override
     public OrdersDTO findById(Long id) {
@@ -205,10 +284,21 @@ import java.util.stream.Collectors;
                 .collect(Collectors.toList());
     }
 
+
+    @Override
+    public List<OrdersDTO> findOrdersByUser(User user) {
+        List<Orders> orders = ordersRepository.findAllByUser(user);
+        return orders.stream()
+                .map(ordersMapper::toOrdersDTO)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public void delete(Long id) {
         Orders order = ordersRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         ordersRepository.delete(order);
     }
+
+
 }

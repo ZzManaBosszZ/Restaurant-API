@@ -37,11 +37,12 @@ public class CartMapper {
             throw new AppException(ErrorCode.NOTFOUND);
         }
         Food food = cartItem.getFood();
+        String foodImage = cartItem.getFood().getImages().isEmpty() ? null : cartItem.getFood().getImages().get(0).getImageUrl();
         return CartItemDTO.builder()
                 .id(cartItem.getId())
                 .foodId(food.getId())
                 .foodName(food.getName())
-                .foodImage(food.getImage())
+                .foodImage(foodImage)
                 .foodPrice(food.getPrice())
                 .quantity(cartItem.getQuantity())
                 .createdBy(cartItem.getCreatedBy())

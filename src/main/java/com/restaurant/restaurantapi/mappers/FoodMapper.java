@@ -4,6 +4,11 @@ import com.restaurant.restaurantapi.entities.Review;
 import com.restaurant.restaurantapi.dtos.food.FoodDTO;
 import com.restaurant.restaurantapi.entities.Food;
 import org.springframework.stereotype.Component;
+import com.restaurant.restaurantapi.entities.FoodImage;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class FoodMapper {
@@ -16,11 +21,13 @@ public class FoodMapper {
                 .mapToDouble(Review::getRating)
                 .average()
                 .orElse(0.0);
-
+        List<String> foodImages = food.getImages() != null ? food.getImages().stream()
+                .map(FoodImage::getImageUrl)
+                .collect(Collectors.toList()) : new ArrayList<>();
         return FoodDTO.builder()
                 .id(food.getId())
                 .name(food.getName())
-                .image(food.getImage())
+                .image(foodImages)
                 .price(food.getPrice())
                 .description(food.getDescription())
                 .quantity(food.getQuantity())
@@ -32,11 +39,18 @@ public class FoodMapper {
                 .modifiedBy(food.getModifiedBy())
                 .build();
     }
+
     public FoodSummaryDTO toFoodSummaryDTO(Food food) {
-        if (food == null) return null;
+        if (food == null) {
+            return null;
+        }
+        String foodImage = food.getImages().stream()
+                .map(FoodImage::getImageUrl)
+                .findFirst()
+                .orElse(null);
         return FoodSummaryDTO.builder()
                 .name(food.getName())
-                .image(food.getImage())
+                .image(foodImage)
                 .price(food.getPrice())
                 .build();
     }

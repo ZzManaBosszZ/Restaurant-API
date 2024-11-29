@@ -14,12 +14,12 @@ public class CartItemMapper {
         if (cartItem == null) {
             return null;
         }
-
+        String foodImage = cartItem.getFood().getImages().isEmpty() ? null : cartItem.getFood().getImages().get(0).getImageUrl();
         return CartItemDTO.builder()
                 .id(cartItem.getId())
                 .foodId(cartItem.getFood().getId())
                 .foodName(cartItem.getFood().getName())
-                .foodImage(cartItem.getFood().getImage())
+                .foodImage(foodImage)
                 .foodPrice(cartItem.getFood().getPrice())
                 .quantity(cartItem.getQuantity())
                 .createdBy(cartItem.getCreatedBy())

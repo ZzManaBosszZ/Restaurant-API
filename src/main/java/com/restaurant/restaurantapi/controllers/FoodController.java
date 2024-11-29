@@ -77,7 +77,7 @@ public class FoodController {
                                                  @RequestParam("description") String description,
                                                  @RequestParam("quantity") int quantity,
                                                  @RequestParam("categoryId") int categoryId,
-                                                 @RequestParam("image") MultipartFile image) {
+                                                 @RequestParam("image") List<MultipartFile> image) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
         CreateFood createFood = new CreateFood();
@@ -101,7 +101,7 @@ public class FoodController {
             @RequestParam("description") String description,
             @RequestParam("quantity") int quantity,
             @RequestParam("categoryId") long categoryId,
-            @RequestParam(value = "image", required = false) MultipartFile image) {
+            @RequestParam(value = "image", required = false) List<MultipartFile> image) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
         EditFood editFood = new EditFood();

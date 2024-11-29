@@ -12,6 +12,5 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findAllByFood(Food food);
     Review findByFoodAndUser(Food food, User user);
-
     List<Review> findAllByFoodId(Long foodId);
 }

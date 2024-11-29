@@ -1,5 +1,6 @@
 package com.restaurant.restaurantapi.dtos.review;
 
+import com.restaurant.restaurantapi.dtos.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,4 +22,5 @@ public class ReviewDTO {
     private Timestamp modifiedDate;
     private String createdBy;
     private String modifiedBy;
+    private UserDTO userDTO;
 }

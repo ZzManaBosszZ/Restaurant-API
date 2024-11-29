@@ -1,6 +1,5 @@
 package com.restaurant.restaurantapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -12,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "review")
 @SuperBuilder
-@ToString
+
 public class Review extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
