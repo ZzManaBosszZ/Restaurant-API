@@ -3,6 +3,7 @@ package com.restaurant.restaurantapi.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
@@ -20,10 +21,17 @@ public class Payment extends BaseEntity {
     @Column(name = "is_paid", nullable = false)
     private boolean isPaid;
 
-    @Column(name = "price", nullable = false)
-    private Double price;
+    @Column(name = "price", nullable = false, precision = 12, scale = 2)
+    private BigDecimal price;
 
-    @Column(name = "payment_date", nullable = false)
+    @Column(name = "status", nullable = false, length = 30)
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
+
+//    @Column(name = "payment_date", nullable = false)
+//    private LocalDateTime paymentDate;
+
+    @Column(name = "payment_date")
     private LocalDateTime paymentDate;
 
     @OneToOne

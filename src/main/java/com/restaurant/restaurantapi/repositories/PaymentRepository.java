@@ -13,5 +13,10 @@ import java.util.Optional;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    Payment findByOrderAndUser(Orders order, User user);
+//    Payment findByOrderAndUser(Orders order, User user);
+
+    Optional<Payment> findByOrderAndUser(
+            Orders order,
+            User user
+    );
 }

@@ -5,6 +5,7 @@ import com.restaurant.restaurantapi.dtos.payment.PaymentDTO;
 import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.models.payment.CreatePayment;
 import com.restaurant.restaurantapi.services.impl.PaymentService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -24,12 +25,42 @@ public class PaymentController {
     }
 
     @PostMapping("/payment")
-    ResponseEntity<ResponseObject> insert(@RequestBody CreatePayment createPayment) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) auth.getPrincipal();
-        PaymentDTO paymentDTO = paymentService.payment(createPayment, currentUser);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok", paymentDTO)
-        );
+    public ResponseEntity<ResponseObject> insert(
+            @Valid @RequestBody CreatePayment createPayment
+    ) {
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
+
+        User currentUser =
+                (User) authentication.getPrincipal();
+
+        PaymentDTO paymentDTO =
+                paymentService.payment(
+                        createPayment,
+                        currentUser
+                );
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(
+                        new ResponseObject(
+                                true,
+                                201,
+                                "Payment initialized",
+                                paymentDTO
+                        )
+                );
     }
+
+//    @PostMapping("/payment")
+//    ResponseEntity<ResponseObject> insert(@RequestBody CreatePayment createPayment) {
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        User currentUser = (User) auth.getPrincipal();
+//        PaymentDTO paymentDTO = paymentService.payment(createPayment, currentUser);
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                new ResponseObject(true, 200, "ok", paymentDTO)
+//        );
+//    }
 }
