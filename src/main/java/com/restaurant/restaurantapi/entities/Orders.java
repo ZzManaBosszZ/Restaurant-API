@@ -34,8 +34,14 @@ public class Orders extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @Column(name = "paymentMethod", nullable = false)
+    @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
+
+    @Column(name = "customer_phone", length = 30)
+    private String customerPhone;
+
+    @Column(name = "delivery_address", length = 500)
+    private String deliveryAddress;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     @JsonIgnore

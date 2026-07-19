@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -57,4 +58,8 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
     List<Object[]> getDailyRevenue(@Param("startDate") Timestamp startDate);
 
     List<Orders> findByUserId(Long userId);
+
+    List<Orders> findByUserIdOrderByCreatedDateDesc(Long userId);
+
+    Optional<Orders> findByIdAndUserId(Long orderId, Long userId);
 }

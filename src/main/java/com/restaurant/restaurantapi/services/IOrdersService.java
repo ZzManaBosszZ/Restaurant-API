@@ -33,8 +33,6 @@ public class IOrdersService implements OrdersService {
     private final FoodRepository foodRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final FoodOrderDetailRepository foodOrderDetailRepository;
-//    private final CartServiceImpl cartService;
-
 
     private String generateOrderCode() {
         return UUID.randomUUID().toString();
@@ -72,6 +70,8 @@ public class IOrdersService implements OrdersService {
                 .status(OrderStatus.pending)
                 .user(user)
                 .paymentMethod(createOrders.getPaymentMethod())
+                .customerPhone(createOrders.getPhone())
+                .deliveryAddress(createOrders.getAddress())
                 .createdBy(user.getFullName())
                 .modifiedBy(user.getFullName())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
@@ -125,11 +125,6 @@ public class IOrdersService implements OrdersService {
 
         // Set total price in Order
         order.setTotal(total);
-
-//        if ("paypal".equalsIgnoreCase(createOrders.getPaymentMethod())) {
-////            order.IsPaid(true);
-//            order.setStatus(OrderStatus.paid);
-//        }
 
         // Save Order and FoodOrderDetail
         OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
@@ -238,5 +233,25 @@ public class IOrdersService implements OrdersService {
         Orders order = ordersRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
         ordersRepository.delete(order);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrdersDTO> findByCurrentUser(Long userId) {
+        return ordersRepository
+                .findByUserIdOrderByCreatedDateDesc(userId)
+                .stream()
+                .map(ordersMapper::toOrdersDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrdersDTO findByIdAndUserId(Long orderId, Long userId) {
+        Orders order = ordersRepository
+                .findByIdAndUserId(orderId, userId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        return ordersMapper.toOrdersDTO(order);
     }
 }
