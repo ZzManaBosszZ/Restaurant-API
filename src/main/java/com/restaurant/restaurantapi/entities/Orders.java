@@ -46,4 +46,5 @@ public class Orders extends BaseEntity {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     @JsonIgnore
     private OrderDetail orderDetail;
+
 }

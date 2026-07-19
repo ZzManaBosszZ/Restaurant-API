@@ -1,11 +1,12 @@
 package com.restaurant.restaurantapi.controllers;
 
 import com.restaurant.restaurantapi.dtos.ResponseObject;
+import com.restaurant.restaurantapi.dtos.orderdetail.OrderDetailDTO;
 import com.restaurant.restaurantapi.dtos.orders.OrdersDTO;
+import com.restaurant.restaurantapi.entities.OrderStatus;
 import com.restaurant.restaurantapi.models.orders.CreateOrders;
 import com.restaurant.restaurantapi.entities.User;
 import com.restaurant.restaurantapi.services.impl.OrdersService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -73,6 +74,25 @@ public class OrdersController {
         );
     }
 
+
+    @GetMapping("/history")
+    public ResponseEntity<ResponseObject> getOrderHistory() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        List<OrdersDTO> orderHistory = ordersService.findOrdersByUser(currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", orderHistory)
+        );
+    }
+    @GetMapping("/{orderId}/history-detail")
+    public ResponseEntity<ResponseObject> getOrderHistoryDetail(@PathVariable Long orderId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) auth.getPrincipal();
+        OrderDetailDTO orderDetail = ordersService.getOrderDetailByIdAndUser(orderId, currentUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok",orderDetail)
+        );
+    }
     @PostMapping("/orders")
     public ResponseEntity<ResponseObject> create(@Valid @RequestBody CreateOrders createOrders) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -88,7 +108,8 @@ public class OrdersController {
         );
     }
     @DeleteMapping("/orders/{id}")
-    public ResponseEntity<ResponseObject> delete(@PathVariable("id") Long id) {        ordersService.delete(id);
+    public ResponseEntity<ResponseObject> delete(@PathVariable("id") Long id) {
+        ordersService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(
                 new ResponseObject(true, 204, "Delete Success", "")
         );

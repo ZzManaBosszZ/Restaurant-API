@@ -48,7 +48,7 @@ public enum ErrorCode {
     // Course Online Student
     // Item online
 
-
+    INVALID_ORDER_STATUS_CHANGE(404, "Invalid Order Status Change", HttpStatus.BAD_REQUEST),
     // Class
     CLASS_NOTFOUND(404, "Students do not have classes", HttpStatus.NOT_FOUND),
 

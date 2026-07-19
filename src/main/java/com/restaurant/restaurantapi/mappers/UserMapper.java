@@ -12,7 +12,7 @@ public class UserMapper {
         return UserDTO.builder()
                 .id(user.getId())
                 .code(user.getCode())
-                .fullName(user.getUsername())
+                .fullName(user.getFullName())
                 .email(user.getEmail())
                 .address(user.getAddress())
                 .phone(user.getPhone())

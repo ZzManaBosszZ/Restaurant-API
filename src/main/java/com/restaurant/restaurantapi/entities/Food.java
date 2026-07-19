@@ -21,9 +21,8 @@ public class Food extends BaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "image", nullable = false)
-    @Pattern(regexp = "^(http|https)://.*$", message = "Image URL should be a valid URL")
-    private String image;
+    @OneToMany(mappedBy = "food", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<FoodImage> images = new ArrayList<>();
 
     @Column(name = "price", nullable = false)
     private Double price;

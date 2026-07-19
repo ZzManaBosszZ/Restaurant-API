@@ -5,9 +5,9 @@ import com.restaurant.restaurantapi.dtos.menuadmin.Menu;
 import com.restaurant.restaurantapi.dtos.menuadmin.MenuItem;
 import com.restaurant.restaurantapi.dtos.orders.*;
 import com.restaurant.restaurantapi.entities.*;
+import com.restaurant.restaurantapi.mappers.OrdersMapper;
 import com.restaurant.restaurantapi.mappers.UserMapper;
 import com.restaurant.restaurantapi.repositories.FoodOrderDetailRepository;
-import com.restaurant.restaurantapi.repositories.MenuRepository;
 import com.restaurant.restaurantapi.repositories.OrdersRepository;
 import com.restaurant.restaurantapi.repositories.UserRepository;
 import com.restaurant.restaurantapi.services.impl.AdminService;
@@ -17,7 +17,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -34,6 +33,7 @@ public class AdminServiceImpl implements AdminService {
     private final FoodOrderDetailRepository foodOrderDetailRepository;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final OrdersMapper ordersMapper  ;
 
     @Override
     public List<Menu> getMenu(User currenUser) {
@@ -341,5 +341,16 @@ public class AdminServiceImpl implements AdminService {
                 .orders(orders)
                 .build();
     }
+
+    @Override
+    public List<OrdersDTO> getOrdersReadyForShipping(User currentUser) {
+        List<Orders> ordersList = ordersRepository.findByStatus(OrderStatus.pending);
+        return ordersList.stream()
+                .map(ordersMapper::toOrdersDTO)
+                .collect(Collectors.toList());
+    }
+
+
+
 
 }

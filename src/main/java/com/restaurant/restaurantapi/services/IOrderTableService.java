@@ -2,6 +2,7 @@ package com.restaurant.restaurantapi.services;
 
 import com.restaurant.restaurantapi.dtos.ordertable.OrderTableDTO;
 import com.restaurant.restaurantapi.entities.Menu;
+import com.restaurant.restaurantapi.entities.Notification;
 import com.restaurant.restaurantapi.entities.OrderStatus;
 import com.restaurant.restaurantapi.entities.OrderTable;
 import com.restaurant.restaurantapi.exceptions.AppException;
@@ -10,6 +11,7 @@ import com.restaurant.restaurantapi.mappers.OrderTableMapper;
 import com.restaurant.restaurantapi.models.mail.MailStructure;
 import com.restaurant.restaurantapi.models.ordertable.CreateOrderTable;
 import com.restaurant.restaurantapi.repositories.MenuRepository;
+import com.restaurant.restaurantapi.repositories.NotificationRepository;
 import com.restaurant.restaurantapi.repositories.OrderTableRepository;
 
 import com.restaurant.restaurantapi.services.impl.INotificationService;
@@ -18,6 +20,7 @@ import com.restaurant.restaurantapi.services.impl.OrderTableService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,10 +28,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class IOrderTableService implements OrderTableService {
 
+    private final INotificationService notificationService;
     private final OrderTableRepository orderTableRepository;
     private final MenuRepository menuRepository;
     private final OrderTableMapper orderTableMapper;
-    private final INotificationService notificationService;
     private final MailService mailService;
 //    @Override
 //    public OrderTableDTO createOrderTable(CreateOrderTable createOrderTable) {

@@ -25,7 +25,7 @@ public class OrderDetail extends BaseEntity {
     private Orders order;
 
     @OneToMany(mappedBy = "orderDetail", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FoodOrderDetail> foodOrderDetails = new ArrayList<>();
+    private List<FoodOrderDetail> foodOrderDetails;
 
 //    @Column(name = "quantity")
 //    private Integer quantity;

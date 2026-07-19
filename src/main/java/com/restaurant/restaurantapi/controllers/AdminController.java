@@ -78,6 +78,7 @@ public class AdminController {
         );
     }
 
+
     @GetMapping("/daily-revenue")
     public ResponseEntity<ResponseObject> getDailyRevenue() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -87,7 +88,6 @@ public class AdminController {
                 new ResponseObject(true, 200, "ok" , dailyRevenue)
         );
     }
-
     @GetMapping("all-user")
     public ResponseEntity<ResponseObject> getAllUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -97,7 +97,6 @@ public class AdminController {
                 new ResponseObject(true, 200, "ok" , userDTOS)
         );
     }
-
     @GetMapping("user-orders/{userId}")
     public ResponseEntity<ResponseObject> getUserOrders(@PathVariable Long userId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -105,6 +104,15 @@ public class AdminController {
         UserOrdersResponseDTO userOrders = adminService.getOrdersByUser(userId,currenUser);
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject(true, 200, "ok", userOrders)
+        );
+    }
+    @GetMapping("/orders/ready-for-shipping")
+    public ResponseEntity<ResponseObject> getOrdersReadyForShipping() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User currenUser = (User) auth.getPrincipal();
+        List<OrdersDTO> orders = adminService.getOrdersReadyForShipping(currenUser);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "ok", orders)
         );
     }
 

@@ -16,4 +16,5 @@ public interface AdminService {
     List<DailyRevenueDTO> getDailyRevenue(User currentUser);
     List<UserDTO> getUser(User currenUser);
     UserOrdersResponseDTO getOrdersByUser(Long userId, User currenUser);
+    List<OrdersDTO> getOrdersReadyForShipping(User currentUser);
 }

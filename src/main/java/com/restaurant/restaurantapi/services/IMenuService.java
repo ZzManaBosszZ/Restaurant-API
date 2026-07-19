@@ -32,6 +32,7 @@ public class IMenuService implements MenuService {
                 .name(createMenu.getName())
                 .image("http://localhost:8080/api/v1/FileUpload/files/" + generatedFileName)
                 .description(createMenu.getDescription())
+
                 .createdBy(user.getUsername())
                 .menuFoods(new ArrayList<>())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
@@ -45,7 +46,7 @@ public class IMenuService implements MenuService {
     @Override
     public MenuDTO update(EditMenu editMenu, User user) throws AppException {
         Menu menu = menuRepository.findById(editMenu.getId())
-         .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
+                .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
         String imageUrl = menu.getImage();
         if (editMenu.getImage() != null && !editMenu.getImage().isEmpty()) {
             try {
@@ -69,7 +70,8 @@ public class IMenuService implements MenuService {
     public void delete(Long[] ids) {
         for (Long id : ids) {
             if (menuRepository.existsById(id)) {
-                menuRepository.deleteById(id);
+                menuRepository.deleteById(id)
+                ;
             } else {
                 throw new AppException(ErrorCode.FOOD_NOTFOUND);
             }
@@ -79,6 +81,7 @@ public class IMenuService implements MenuService {
     @Override
     public MenuDTO findById(Long id) {
         Menu menu = menuRepository.findById(id)
+
                 .orElseThrow(() -> new AppException(ErrorCode.MENU_NOTFOUND));
         return menuMapper.toMenuDTO(menu);
     }
