@@ -24,6 +24,8 @@ public class PaymentDTO {
     private String paymentMethod;
     private PaymentStatus status;
     private boolean isPaid;
+    private String paypalOrderId;
+    private String currency;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;
