@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -60,8 +61,7 @@ public interface OrdersRepository extends JpaRepository<Orders, Long> {
 
     List<Orders> findByUserId(Long userId);
 
-    List<Orders> findAllByUser(User user);
+    List<Orders> findByUserIdOrderByCreatedDateDesc(Long userId);
 
-    List<Orders> findByStatus(OrderStatus status);
-
+    Optional<Orders> findByIdAndUserId(Long orderId, Long userId);
 }

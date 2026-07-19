@@ -32,11 +32,45 @@ public class OrdersController {
         );
     }
 
+//    @GetMapping("/orders/{id}")
+//    public ResponseEntity<ResponseObject> getById(@PathVariable("id") Long id) {
+//        OrdersDTO ordersDTO = ordersService.findById(id);
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                new ResponseObject(true, 200, "ok", ordersDTO)
+//        );
+//    }
+
     @GetMapping("/orders/{id}")
-    public ResponseEntity<ResponseObject> getById(@PathVariable("id") Long id) {
-        OrdersDTO ordersDTO = ordersService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok", ordersDTO)
+    public ResponseEntity<ResponseObject> getMyOrderById(
+            @PathVariable("id") Long id
+    ) {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null ||
+                !authentication.isAuthenticated() ||
+                !(authentication.getPrincipal() instanceof User currentUser)) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    new ResponseObject(
+                            false,
+                            401,
+                            "User not authenticated",
+                            null
+                    )
+            );
+        }
+
+        OrdersDTO order =
+                ordersService.findByIdAndUserId(id, currentUser.getId());
+
+        return ResponseEntity.ok(
+                new ResponseObject(
+                        true,
+                        200,
+                        "Get order detail successfully",
+                        order
+                )
         );
     }
 
@@ -81,14 +115,35 @@ public class OrdersController {
         );
     }
 
-    @PatchMapping("/order/{id}/status")
-    public ResponseEntity<ResponseObject> updateOrderStatus(
-            @PathVariable("id") Long orderId,
-            @RequestParam("status") OrderStatus newStatus) {
-        ordersService.updateStatus(orderId, newStatus);
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject(true, 200, "ok","")
+    @GetMapping("/orders/my-orders")
+    public ResponseEntity<ResponseObject> getMyOrders() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null ||
+                !authentication.isAuthenticated() ||
+                !(authentication.getPrincipal() instanceof User currentUser)) {
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    new ResponseObject(
+                            false,
+                            401,
+                            "User not authenticated",
+                            null
+                    )
+            );
+        }
+
+        List<OrdersDTO> orders =
+                ordersService.findByCurrentUser(currentUser.getId());
+
+        return ResponseEntity.ok(
+                new ResponseObject(
+                        true,
+                        200,
+                        "Get order history successfully",
+                        orders
+                )
         );
     }
-
 }

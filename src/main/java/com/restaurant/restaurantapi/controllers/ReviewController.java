@@ -33,7 +33,7 @@ public class ReviewController {
     }
 
 
-    @DeleteMapping
+    @DeleteMapping("review")
     ResponseEntity<ResponseObject> delete(@RequestBody Long[] ids) {
         reviewService.delete(ids);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -41,16 +41,15 @@ public class ReviewController {
         );
     }
 
-//    @GetMapping("/{id}")
-//    ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
-//        ReviewDTO reviewDTO = reviewService.findById(id)
-//                ;
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                new ResponseObject(true, 200, "Find Success", reviewDTO)
-//        );
-//    }
+    @GetMapping("review/{id}")
+    ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
+        ReviewDTO reviewDTO = reviewService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject(true, 200, "Find Success", reviewDTO)
+        );
+    }
 
-    @GetMapping("any/review/food/{foodId}")
+    @GetMapping("review/food/{foodId}")
     ResponseEntity<ResponseObject> findAllByFoodId(@PathVariable Long foodId) {
         List<ReviewDTO> reviews = reviewService.findAllByFoodId(foodId);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -58,7 +57,7 @@ public class ReviewController {
         );
     }
 
-    @GetMapping("/user/{userId}/food/{foodId}")
+    @GetMapping("review/user/{userId}/food/{foodId}")
     ResponseEntity<ResponseObject> findByFoodAndUser(@PathVariable Long userId, @PathVariable Long foodId) {
         ReviewDTO reviewDTO = reviewService.findByFoodAndUser(foodId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(

@@ -36,9 +36,6 @@ public class IOrdersService implements OrdersService {
     private final FoodRepository foodRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final FoodOrderDetailRepository foodOrderDetailRepository;
-    private final OrderDetailMapper orderDetailMapper;
-//    private final CartServiceImpl cartService;
-
 
     private String generateOrderCode() {
         return UUID.randomUUID().toString();
@@ -46,6 +43,28 @@ public class IOrdersService implements OrdersService {
     @Transactional(rollbackFor = AppException.class)
     @Override
     public OrdersDTO create(CreateOrders createOrders, User user) throws AppException {
+
+        if (createOrders.getFoodQuantities() == null
+                || createOrders.getFoodQuantities().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Order must contain at least one food item"
+            );
+        }
+
+        for (FoodQuantity item : createOrders.getFoodQuantities()) {
+            if (item.getFoodId() == null) {
+                throw new IllegalArgumentException(
+                        "Food ID must not be null"
+                );
+            }
+
+            if (item.getQuantity() == null || item.getQuantity() <= 0) {
+                throw new IllegalArgumentException(
+                        "Food quantity must be greater than 0"
+                );
+            }
+        }
+
         String orderCode = generateOrderCode();
         Orders order = Orders.builder()
                 .orderCode(orderCode)
@@ -54,6 +73,8 @@ public class IOrdersService implements OrdersService {
                 .status(OrderStatus.pending)
                 .user(user)
                 .paymentMethod(createOrders.getPaymentMethod())
+                .customerPhone(createOrders.getPhone())
+                .deliveryAddress(createOrders.getAddress())
                 .createdBy(user.getFullName())
                 .modifiedBy(user.getFullName())
                 .createdDate(new Timestamp(System.currentTimeMillis()))
@@ -107,14 +128,6 @@ public class IOrdersService implements OrdersService {
 
         // Set total price in Order
         order.setTotal(total);
-
-        if ("paypal".equalsIgnoreCase(createOrders.getPaymentMethod())) {
-          order.setPaid(true);
-//            order.setStatus(OrderStatus.paid);
-        }
-        else if ("cod".equalsIgnoreCase(createOrders.getPaymentMethod())) {
-            order.setPaid(false);  // Thanh toán qua COD thì mặc định là chưa thanh toán
-        }
 
         // Save Order and FoodOrderDetail
         OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
@@ -235,50 +248,23 @@ public class IOrdersService implements OrdersService {
         ordersRepository.delete(order);
     }
 
-    @Transactional(rollbackFor = AppException.class)
     @Override
-    public void updateStatus(Long orderId, OrderStatus newStatus) throws AppException {
-        Orders order = ordersRepository.findById(orderId)
-                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        if (order.getStatus().equals(OrderStatus.completed) || order.getStatus().equals(OrderStatus.cancelled)) {
-            throw new AppException(ErrorCode.INVALID_ORDER_STATUS_CHANGE);
-        }
-
-        if (newStatus.equals(OrderStatus.completed)) {
-            if (!order.getStatus().equals(OrderStatus.process)) {
-                throw new AppException(ErrorCode.INVALID_ORDER_STATUS_CHANGE);
-            }
-            if ("cod".equalsIgnoreCase(order.getPaymentMethod())) {
-                order.setPaid(true);
-            }
-        }
-        if (newStatus.ordinal() < order.getStatus().ordinal()) {
-            throw new AppException(ErrorCode.INVALID_ORDER_STATUS_CHANGE);
-        }
-
-        order.setStatus(newStatus);
-        order.setModifiedDate(new Timestamp(System.currentTimeMillis()));
-        ordersRepository.save(order);
+    @Transactional(readOnly = true)
+    public List<OrdersDTO> findByCurrentUser(Long userId) {
+        return ordersRepository
+                .findByUserIdOrderByCreatedDateDesc(userId)
+                .stream()
+                .map(ordersMapper::toOrdersDTO)
+                .collect(Collectors.toList());
     }
 
-
-
-
     @Override
-    public OrderDetailDTO getOrderDetailByIdAndUser(Long orderId, User currentUser) {
-
-        Orders order = ordersRepository.findById(orderId)
+    @Transactional(readOnly = true)
+    public OrdersDTO findByIdAndUserId(Long orderId, Long userId) {
+        Orders order = ordersRepository
+                .findByIdAndUserId(orderId, userId)
                 .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
-        if (!order.getUser().getId().equals(currentUser.getId())) {
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-        }
-        OrderDetail orderDetail = order.getOrderDetail();
-        if (orderDetail == null) {
-            throw new AppException(ErrorCode.ORDER_DETAIL_NOT_FOUND);
-        }
-        return orderDetailMapper.toOrderDetailDTO(orderDetail);
+
+        return ordersMapper.toOrdersDTO(order);
     }
-
-
-
 }

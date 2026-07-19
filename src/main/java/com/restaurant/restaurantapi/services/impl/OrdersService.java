@@ -14,9 +14,7 @@ public interface OrdersService {
     void delete(Long id);
     OrdersDTO findById(Long id);
     List<OrdersDTO> findAll();
-    List<OrdersDTO> findOrdersByUser(User user);
-    void updateStatus(Long orderId, OrderStatus newStatus) ;
-    OrderDetailDTO getOrderDetailByIdAndUser(Long orderId, User currentUser);
-
+    List<OrdersDTO> findByCurrentUser(Long userId);
+    OrdersDTO findByIdAndUserId(Long orderId, Long userId);
 
 }

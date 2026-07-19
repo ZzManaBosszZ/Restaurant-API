@@ -19,6 +19,9 @@ public class OrdersDTO {
     private boolean isPaid;
     private OrderStatus status;
     private OrderDetailDTO orderDetail;
+    private String paymentMethod;
+    private String customerPhone;
+    private String deliveryAddress;
     private Timestamp createdDate;
     private Timestamp modifiedDate;
     private String createdBy;
