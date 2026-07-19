@@ -42,6 +42,28 @@ public class IOrdersService implements OrdersService {
     @Transactional(rollbackFor = AppException.class)
     @Override
     public OrdersDTO create(CreateOrders createOrders, User user) throws AppException {
+
+        if (createOrders.getFoodQuantities() == null
+                || createOrders.getFoodQuantities().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Order must contain at least one food item"
+            );
+        }
+
+        for (FoodQuantity item : createOrders.getFoodQuantities()) {
+            if (item.getFoodId() == null) {
+                throw new IllegalArgumentException(
+                        "Food ID must not be null"
+                );
+            }
+
+            if (item.getQuantity() == null || item.getQuantity() <= 0) {
+                throw new IllegalArgumentException(
+                        "Food quantity must be greater than 0"
+                );
+            }
+        }
+
         String orderCode = generateOrderCode();
         Orders order = Orders.builder()
                 .orderCode(orderCode)
@@ -104,10 +126,10 @@ public class IOrdersService implements OrdersService {
         // Set total price in Order
         order.setTotal(total);
 
-        if ("paypal".equalsIgnoreCase(createOrders.getPaymentMethod())) {
-//            order.IsPaid(true);
-            order.setStatus(OrderStatus.paid);
-        }
+//        if ("paypal".equalsIgnoreCase(createOrders.getPaymentMethod())) {
+////            order.IsPaid(true);
+//            order.setStatus(OrderStatus.paid);
+//        }
 
         // Save Order and FoodOrderDetail
         OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);

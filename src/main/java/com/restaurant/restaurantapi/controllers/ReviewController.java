@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/review")
+@RequestMapping("/api/v1/")
 @RequiredArgsConstructor
 public class ReviewController {
     private final ReviewService reviewService;
@@ -42,7 +42,7 @@ public class ReviewController {
 //        );
 //    }
 
-    @DeleteMapping
+    @DeleteMapping("review")
     ResponseEntity<ResponseObject> delete(@RequestBody Long[] ids) {
         reviewService.delete(ids);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -50,7 +50,7 @@ public class ReviewController {
         );
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("review/{id}")
     ResponseEntity<ResponseObject> findById(@PathVariable Long id) {
         ReviewDTO reviewDTO = reviewService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -58,7 +58,7 @@ public class ReviewController {
         );
     }
 
-    @GetMapping("/food/{foodId}")
+    @GetMapping("review/food/{foodId}")
     ResponseEntity<ResponseObject> findAllByFoodId(@PathVariable Long foodId) {
         List<ReviewDTO> reviews = reviewService.findAllByFoodId(foodId);
         return ResponseEntity.status(HttpStatus.OK).body(
@@ -66,7 +66,7 @@ public class ReviewController {
         );
     }
 
-    @GetMapping("/user/{userId}/food/{foodId}")
+    @GetMapping("review/user/{userId}/food/{foodId}")
     ResponseEntity<ResponseObject> findByFoodAndUser(@PathVariable Long userId, @PathVariable Long foodId) {
         ReviewDTO reviewDTO = reviewService.findByFoodAndUser(foodId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(

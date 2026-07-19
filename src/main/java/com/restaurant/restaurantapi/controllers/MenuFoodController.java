@@ -45,7 +45,7 @@ public class MenuFoodController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/menu-food/{id}")
     public ResponseEntity<ResponseObject> updateMenuFood(@PathVariable Long id, @RequestBody EditMenuFood editMenuFood) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) auth.getPrincipal();
@@ -67,7 +67,7 @@ public class MenuFoodController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/menu-food/{id}")
     public ResponseEntity<ResponseObject> deleteMenuFood(@PathVariable Long id) {
         try {
             menuFoodService.delete(new Long[]{id});
@@ -79,7 +79,7 @@ public class MenuFoodController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/menu-food/{id}")
     public ResponseEntity<ResponseObject> findMenuFoodById(@PathVariable Long id) {
         try {
             MenuFoodDTO menuFoodDTO = menuFoodService.findById(id);
